@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HeavyEngine.Injection {
+namespace HeavyEngine {
     /// <summary>
     /// An attribute that can be used to indicate a field should be injected by the <see cref="IDependencyInjector"/>
     /// </summary>

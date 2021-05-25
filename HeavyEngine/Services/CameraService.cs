@@ -10,14 +10,12 @@ namespace HeavyEngine.Services {
     public class CameraService {
         private readonly List<Camera> cameras;
         private Camera mainCamera;
-        [Dependency()] private ILogger logger;
+        [Dependency()] private readonly ILogger logger;
 
         public Camera MainCamera => mainCamera;
         
         public CameraService() {
             cameras = new List<Camera>();
-
-            this.Inject();
         }
 
         public void RegisterCamera(Camera camera) {

@@ -24,6 +24,9 @@ namespace HeavyEngine.Injection {
             if (attribute == null)
                 return;
 
+            if (field.GetValue(obj) != null)
+                return;
+
             var service = Services.Get(field.FieldType, attribute.Tag);
 
             Inject(service);
