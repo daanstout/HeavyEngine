@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Reflection;
 
 using HeavyEngine.Injection;
-using HeavyEngine.Logging;
-using HeavyEngine.Services;
 
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
@@ -17,9 +13,7 @@ namespace HeavyEngine {
         }
 
         protected virtual void SetupServices(IServiceLibrary services) {
-            services.AddSingleton<ILogger, ConsoleLogger>(DependencyConstants.LOGGER_CONSOLE_LOGGER);
-            services.AddSingleton<ILogger, FileLogger>(DependencyConstants.LOGGER_FILE_LOGGER);
-            services.AddSingleton<CameraService, CameraService>();
+            services.FindServices(Assembly.GetExecutingAssembly());
         }
 
         public static GameWindowSettings CreateDefaultGameWindowSettings() {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 
 namespace HeavyEngine.Injection {
     public interface IServiceLibrary {
@@ -7,5 +8,6 @@ namespace HeavyEngine.Injection {
         bool BindTag(string tag, string target);
         TAbstract Get<TAbstract>(string tag = null);
         object Get(Type type, string tag = null);
+        void FindServices(Assembly assembly);
     }
 }

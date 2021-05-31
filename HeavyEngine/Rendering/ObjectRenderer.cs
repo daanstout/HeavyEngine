@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 
-using OpenTK.Graphics.ES30;
+using OpenTK.Graphics.OpenGL4;
 
 namespace HeavyEngine.Rendering {
     public class ObjectRenderer : IDisposable, IRenderer {
@@ -9,6 +10,7 @@ namespace HeavyEngine.Rendering {
         private readonly VertexArrayObject VAO;
         private readonly VertexBufferObject VBO;
         private readonly ElementBufferObject EBO;
+        private Texture texture;
 
         private bool disposed = false;
 
@@ -24,11 +26,17 @@ namespace HeavyEngine.Rendering {
             Dispose(false);
         }
 
+        public void CreateTexture(string path) {
+            texture = Texture.LoadFromFile(path);
+        }
+
         public void SetMesh(Mesh mesh) {
             Mesh = mesh;
             VBO.SetData(mesh);
 
-            VAO.Push(mesh.Vertices.Length);
+            VAO.Push(3);
+            VAO.Push(3);
+            VAO.Push(2);
             VAO.SetData();
 
             EBO.SetData(mesh);
@@ -45,8 +53,9 @@ namespace HeavyEngine.Rendering {
             if (Mesh.Vertices.Length == 0)
                 return;
 
-            shader.Bind();
             VAO.Bind();
+            texture?.Bind();
+            shader.Bind();
             //EBO.Bind();
             //GL.DrawArrays(PrimitiveType.Triangles, 0, Mesh.Vertices.Length);
             GL.DrawElements(PrimitiveType.Triangles, Mesh.Indices.Length, DrawElementsType.UnsignedInt, new IntPtr(0));
@@ -65,6 +74,7 @@ namespace HeavyEngine.Rendering {
             VAO.Dispose();
             VBO.Dispose();
             EBO.Dispose();
+            texture?.Dispose();
 
             disposed = true;
         }

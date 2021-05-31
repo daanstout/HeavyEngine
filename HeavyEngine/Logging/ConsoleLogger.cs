@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
+using HeavyEngine.Injection;
+
 namespace HeavyEngine.Logging {
+    [Service(typeof(ILogger), ServiceTypes.Singleton, DependencyConstants.LOGGER_CONSOLE_LOGGER)]
     public class ConsoleLogger : ILogger {
         public ConsoleColor LogColor { get; set; } = ConsoleColor.White;
         public ConsoleColor ErrorColor { get; set; } = ConsoleColor.Red;

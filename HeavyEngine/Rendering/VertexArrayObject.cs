@@ -2,16 +2,17 @@
 using System.Collections.Generic;
 using System.Text;
 
-using OpenTK.Graphics.ES30;
+using OpenTK.Graphics.OpenGL4;
 
 namespace HeavyEngine.Rendering {
     public class VertexArrayObject : IDisposable {
         private readonly int id;
-        private int size;
+        private readonly List<int> partitions;
         private bool disposed = false;
 
         public VertexArrayObject() {
             id = GL.GenVertexArray();
+            partitions = new List<int>();
             Bind();
         }
 
@@ -20,13 +21,16 @@ namespace HeavyEngine.Rendering {
         }
 
         public void Push(int size) {
-            this.size += size;
+            partitions.Add(size);
         }
 
-        public void SetData(int index = 0) {
-            GL.VertexAttribPointer(index, size, VertexAttribPointerType.Float, false, Vertex.VERTEX_SIZE * sizeof(float), 0);
-
-            GL.EnableVertexAttribArray(0);
+        public void SetData() {
+            int offset = 0;
+            for(int i = 0; i < partitions.Count; i++) {
+                GL.EnableVertexAttribArray(i);
+                GL.VertexAttribPointer(i, partitions[i], VertexAttribPointerType.Float, false, Vertex.VERTEX_SIZE * sizeof(float), offset * sizeof(float));
+                offset += partitions[i];
+            }
         }
 
         public void Bind() => GL.BindVertexArray(id);

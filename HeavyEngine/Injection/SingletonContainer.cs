@@ -6,7 +6,7 @@ namespace HeavyEngine.Injection {
     public class SingletonContainer<T> : IServiceContainer<T> where T : class, new() {
         private readonly T instance;
         
-        internal SingletonContainer() {
+        public SingletonContainer() {
             instance = new T();
         }
 

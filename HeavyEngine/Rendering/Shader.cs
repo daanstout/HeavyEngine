@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-using OpenTK.Graphics.ES30;
+using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 
 namespace HeavyEngine {
@@ -102,7 +102,7 @@ namespace HeavyEngine {
 
             GL.GetProgram(handle, GetProgramParameterName.ActiveUniforms, out int uniformCount);
             for (int i = 0; i < uniformCount; i++) {
-                GL.GetActiveUniform(handle, i, 100, out int length, out int size, out ActiveUniformType type, out string name);
+                GL.GetActiveUniform(handle, i, 100, out int _, out int _, out ActiveUniformType _, out string name);
                 uniformCache.Add(name, i);
             }
 

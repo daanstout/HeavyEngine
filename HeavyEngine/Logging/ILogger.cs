@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
+using HeavyEngine.Injection;
+
 namespace HeavyEngine.Logging {
-    public interface ILogger {
+    public interface ILogger : IService {
         ConsoleColor LogColor { get; set; }
         ConsoleColor ErrorColor { get; set; }
         ConsoleColor FatalColor { get; set; }

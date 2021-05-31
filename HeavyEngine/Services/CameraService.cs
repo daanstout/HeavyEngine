@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 using HeavyEngine.Injection;
 using HeavyEngine.Logging;
-using HeavyEngine.Extensions;
 
 namespace HeavyEngine.Services {
-    public class CameraService {
+    [Service(typeof(CameraService), ServiceTypes.Singleton)]
+    public class CameraService : IService {
         private readonly List<Camera> cameras;
         private Camera mainCamera;
-        [Dependency()] private readonly ILogger logger;
+        [Dependency] private readonly ILogger logger;
 
         public Camera MainCamera => mainCamera;
         
@@ -32,6 +30,9 @@ namespace HeavyEngine.Services {
                 logger.LogWarning($"{camera} is trying to be deregistered while it is not registered", this);
                 return;
             }
+
+            if (mainCamera == camera)
+                mainCamera = null; // Will probably make the first camera in the list the main camera
 
             cameras.Remove(camera);
         }

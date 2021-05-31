@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-using OpenTK.Graphics.ES30;
+using OpenTK.Graphics.OpenGL4;
 
 namespace HeavyEngine.Rendering {
     public sealed class ElementBufferObject : IDisposable {

@@ -11,8 +11,8 @@ namespace HeavyWindow {
         private static void Main(string[] args) {
             Console.WriteLine("Starting up");
 
-            TestGame();
-            //Game2D();
+            //TestGame();
+            Game2D();
         }
 
         private static void TestGame() {
@@ -26,10 +26,10 @@ namespace HeavyWindow {
 
             var mesh = new Mesh {
                 Vertices = new Vertex[] {
-                    new Vertex { position = new Vector3(0.5f, 0.5f, 0.0f) },
-                    new Vertex { position = new Vector3(0.5f, -0.5f, 0.0f) },
-                    new Vertex { position = new Vector3(-0.5f, -0.5f, 0.0f) },
-                    new Vertex { position = new Vector3(-0.5f, 0.5f, 0.0f) }
+                    new Vertex { position = new Vector3(0.5f, 0.5f, 0.0f), textureCoordinates = new Vector2(1.0f, 1.0f) },
+                    new Vertex { position = new Vector3(0.5f, -0.5f, 0.0f), textureCoordinates = new Vector2(1.0f, 0.0f) },
+                    new Vertex { position = new Vector3(-0.5f, -0.5f, 0.0f), textureCoordinates = new Vector2(0.0f, 0.0f) },
+                    new Vertex { position = new Vector3(-0.5f, 0.5f, 0.0f), textureCoordinates = new Vector2(0.0f, 1.0f) }
                 },
                 Indices = new uint[] {
                     0, 1, 3,
@@ -39,6 +39,7 @@ namespace HeavyWindow {
 
             game.SetMesh(mesh);
             game.CreateShaders("Shaders/VertexShader.vert", "Shaders/FragmentShader.frag");
+            game.AddTexture("Resources/container.png");
 
             game.Run();
         }

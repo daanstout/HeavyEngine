@@ -1,9 +1,5 @@
-﻿using System;
-using System.Diagnostics;
-
-using HeavyEngine;
+﻿using HeavyEngine;
 using HeavyEngine.Injection;
-using HeavyEngine.Logging;
 using HeavyEngine.Services;
 
 using OpenTK.Mathematics;
@@ -18,7 +14,6 @@ namespace HeavyWindow {
 
         protected override void SetupServices(IServiceLibrary services) {
             services.BindTag(null, DependencyConstants.LOGGER_CONSOLE_LOGGER);
-            //services.AddSingleton<ILogger, ConsoleLogger>();
             base.SetupServices(services);
         }
 

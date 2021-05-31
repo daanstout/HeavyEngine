@@ -16,7 +16,7 @@ namespace HeavyEngine {
         private readonly List<IUpdatable> updatables;
         private readonly List<IRenderable> renderables;
 
-        [Dependency] private ILogger logger;
+        [Dependency] protected ILogger logger;
 
         protected GameObject() {
             DependencyObtainer.PrimaryInjector.Inject(this);

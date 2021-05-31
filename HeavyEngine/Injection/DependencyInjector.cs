@@ -5,7 +5,7 @@ namespace HeavyEngine.Injection {
     public class DependencyInjector : IDependencyInjector {
         public IServiceLibrary Services { get; }
 
-        internal DependencyInjector() {
+        public DependencyInjector() {
             Services = new ServiceLibrary();
         }
 

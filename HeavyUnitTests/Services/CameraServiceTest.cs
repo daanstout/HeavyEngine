@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Reflection;
-using System.Text;
 
 using HeavyEngine;
 using HeavyEngine.Logging;
@@ -29,6 +26,46 @@ namespace HeavyUnitTests.Services {
             service.SetCameraMain(cam);
 
             mock.Verify(logger => logger.LogWarning(It.IsAny<string>(), service), Times.Once());
+        }
+
+        [Fact]
+        public void CameraService_SettingRegisteredCameraAsMainCameraIsSuccessful() {
+            var service = new CameraService();
+            var cam = new Camera(Vector2.One);
+
+            service.RegisterCamera(cam);
+            service.SetCameraMain(cam);
+
+            Assert.Equal(service.MainCamera, cam);
+        }
+
+        [Fact]
+        public void CameraService_RegisteringCameraTwiceLogsWarning() {
+            var service = new CameraService();
+
+            var mock = new Mock<ILogger>();
+            mock.Setup(logger => logger.LogWarning(It.IsAny<string>(), service)).Verifiable();
+            Inject(service, mock.Object, "logger");
+
+            var cam = new Camera(Vector2.One);
+
+            service.RegisterCamera(cam);
+            service.RegisterCamera(cam);
+
+            mock.Verify(logger => logger.LogWarning(It.IsAny<string>(), service), Times.Once());
+        }
+
+        [Fact]
+        public void CameraService_DeregisteringMainCameraSetsMainCameraToNull() {
+            var service = new CameraService();
+
+            var cam = new Camera(Vector2.One);
+
+            service.RegisterCamera(cam);
+            service.SetCameraMain(cam);
+            service.DeregisterCamera(cam);
+
+            Assert.Null(service.MainCamera);
         }
 
         private void Inject(object toInject, object injectWith, string fieldToInject) {
