@@ -1,6 +1,4 @@
-﻿using System;
-
-using OpenTK.Mathematics;
+﻿using OpenTK.Mathematics;
 
 namespace HeavyEngine {
     public class Vertex {

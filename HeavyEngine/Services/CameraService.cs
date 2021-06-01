@@ -11,7 +11,7 @@ namespace HeavyEngine.Services {
         [Dependency] private readonly ILogger logger;
 
         public Camera MainCamera => mainCamera;
-        
+
         public CameraService() {
             cameras = new List<Camera>();
         }

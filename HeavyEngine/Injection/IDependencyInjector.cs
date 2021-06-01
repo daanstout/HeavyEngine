@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace HeavyEngine.Injection {
+﻿namespace HeavyEngine.Injection {
     /// <summary>
     /// <see cref="IDependencyInjector"/> contains services that can be injected into fields marked with <see cref="DependencyAttribute"/>
     /// </summary>

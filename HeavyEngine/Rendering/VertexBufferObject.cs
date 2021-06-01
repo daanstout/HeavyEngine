@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 using OpenTK.Graphics.OpenGL4;
 
 namespace HeavyEngine.Rendering {
-    public class VertexBufferObject : IDisposable{
+    public class VertexBufferObject : IDisposable {
         private readonly int id;
         private bool disposed;
 

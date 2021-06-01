@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 using OpenTK.Graphics.OpenGL4;
 
@@ -26,7 +25,7 @@ namespace HeavyEngine.Rendering {
 
         public void SetData() {
             int offset = 0;
-            for(int i = 0; i < partitions.Count; i++) {
+            for (int i = 0; i < partitions.Count; i++) {
                 GL.EnableVertexAttribArray(i);
                 GL.VertexAttribPointer(i, partitions[i], VertexAttribPointerType.Float, false, Vertex.VERTEX_SIZE * sizeof(float), offset * sizeof(float));
                 offset += partitions[i];

@@ -14,6 +14,8 @@ namespace HeavyEngine {
 
         protected virtual void SetupServices(IServiceLibrary services) {
             services.FindServices(Assembly.GetExecutingAssembly());
+
+            services.SetupSelf();
         }
 
         public static GameWindowSettings CreateDefaultGameWindowSettings() {

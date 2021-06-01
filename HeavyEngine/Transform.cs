@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-using OpenTK.Mathematics;
+﻿using OpenTK.Mathematics;
 
 namespace HeavyEngine {
     public class Transform {
@@ -49,7 +45,7 @@ namespace HeavyEngine {
         }
 
         public Transform() : this(Vector3.Zero, Quaternion.Identity, Vector3.One) { }
-        
+
         public Transform(Vector3 position, Vector3 eulerRotation, Vector3 scale) : this(position, Quaternion.FromEulerAngles(eulerRotation), scale) { }
 
         public Transform(Vector3 position, Quaternion rotation, Vector3 scale) {

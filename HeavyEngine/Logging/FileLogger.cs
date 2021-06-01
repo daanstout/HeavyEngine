@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 using HeavyEngine.Injection;
 
 namespace HeavyEngine.Logging {
     [Service(typeof(ILogger), ServiceTypes.Singleton, DependencyConstants.LOGGER_FILE_LOGGER)]
     public class FileLogger : ILogger {
-        public ConsoleColor LogColor { get; set;}
+        public ConsoleColor LogColor { get; set; }
         public ConsoleColor ErrorColor { get; set; }
         public ConsoleColor FatalColor { get; set; }
         public ConsoleColor InfoColor { get; set; }

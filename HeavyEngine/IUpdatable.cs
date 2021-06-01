@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace HeavyEngine {
+﻿namespace HeavyEngine {
     public interface IUpdatable {
         void Update();
     }

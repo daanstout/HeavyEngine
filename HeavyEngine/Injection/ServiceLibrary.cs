@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
+
+using HeavyEngine.Services;
 
 namespace HeavyEngine.Injection {
     public class ServiceLibrary : IServiceLibrary {
@@ -20,11 +21,18 @@ namespace HeavyEngine.Injection {
         }
 
         private readonly Dictionary<ServiceIdentifier, IServiceContainer<object>> services;
+        private readonly List<IServiceContainer<object>> scopedServices;
         private readonly HashSet<Binding> bindings;
+
+        private IEventService eventService;
 
         internal ServiceLibrary() {
             services = new Dictionary<ServiceIdentifier, IServiceContainer<object>>();
             bindings = new HashSet<Binding>();
+        }
+
+        ~ServiceLibrary() {
+            eventService.Unsubscribe<SceneChangedEvent>(OnSceneChanged);
         }
 
         public TAbstract Get<TAbstract>(string tag = null) {
@@ -54,6 +62,17 @@ namespace HeavyEngine.Injection {
             Add(identifier, new TransientContainer<TImplementation>());
         }
 
+        public void AddScoped<TAbstract, TImplementation>(string tag = null) where TImplementation : class, new() {
+            var identifier = new ServiceIdentifier {
+                Type = typeof(TAbstract),
+                Tag = tag
+            };
+
+            var container = new ScopedContainer<TImplementation>();
+            Add(identifier, container);
+            scopedServices.Add(container);
+        }
+
         public void AddSingleton<TAbstract, TImplementation>(string tag = null) where TImplementation : class, new() {
             var identifier = new ServiceIdentifier {
                 Type = typeof(TAbstract),
@@ -74,7 +93,7 @@ namespace HeavyEngine.Injection {
         }
 
         public void FindServices(Assembly assembly) {
-            foreach(var type in assembly.GetTypes()) {
+            foreach (var type in assembly.GetTypes()) {
                 if (type.IsInterface || type.IsAbstract)
                     continue;
 
@@ -82,6 +101,12 @@ namespace HeavyEngine.Injection {
                     RegisterServicesForType(type);
                 }
             }
+        }
+
+        public void SetupSelf() {
+            eventService = Get<IEventService>();
+
+            eventService.Subscribe<SceneChangedEvent>(OnSceneChanged);
         }
 
         private void RegisterServicesForType(Type type) {
@@ -97,19 +122,22 @@ namespace HeavyEngine.Injection {
 
             IServiceContainer<object> container = null;
 
-            if(attrib.ServiceType == ServiceTypes.Singleton) {
+            if (attrib.ServiceType == ServiceTypes.Singleton) {
                 var containerType = typeof(SingletonContainer<>);
                 containerType = containerType.MakeGenericType(type);
                 container = (IServiceContainer<object>)Activator.CreateInstance(containerType);
-            }else if(attrib.ServiceType == ServiceTypes.Transient) {
+            } else if (attrib.ServiceType == ServiceTypes.Transient) {
                 var containerType = typeof(TransientContainer<>);
                 containerType.MakeGenericType(type);
                 container = (IServiceContainer<object>)Activator.CreateInstance(containerType);
-            }else if(attrib.ServiceType == ServiceTypes.Scoped) {
-
+            } else if (attrib.ServiceType == ServiceTypes.Scoped) {
+                var containerType = typeof(ScopedContainer<>);
+                containerType.MakeGenericType(type);
+                container = (IServiceContainer<object>)Activator.CreateInstance(containerType);
+                scopedServices.Add(container);
             }
 
-            if(container == null) 
+            if (container == null)
                 throw new ArgumentException($"The given argument of type {type} does not have a valid setup");
 
             services.Add(identifier, container);
@@ -137,6 +165,11 @@ namespace HeavyEngine.Injection {
                 return services[identifier].Get();
 
             throw new ArgumentException($"Service for type: {identifier.Type} with binding tag: {identifier.Tag} (original: {binding.Tag}) has not been registered");
+        }
+
+        private void OnSceneChanged() {
+            foreach (var container in scopedServices)
+                container.Reset();
         }
     }
 }
