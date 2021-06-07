@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 
-using HeavyEngine.Injection;
 using HeavyEngine.Logging;
 
-namespace HeavyEngine.Services {
+namespace HeavyEngine {
     [Service(typeof(CameraService), ServiceTypes.Singleton)]
     public class CameraService : IService {
         private readonly List<Camera> cameras;
@@ -15,6 +14,8 @@ namespace HeavyEngine.Services {
         public CameraService() {
             cameras = new List<Camera>();
         }
+
+        public void Initialize() { }
 
         public void RegisterCamera(Camera camera) {
             if (cameras.Contains(camera)) {

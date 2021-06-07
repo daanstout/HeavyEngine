@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO;
 
-using HeavyEngine.Injection;
-
 namespace HeavyEngine.Logging {
     [Service(typeof(ILogger), ServiceTypes.Singleton, DependencyConstants.LOGGER_FILE_LOGGER)]
     public class FileLogger : ILogger {
@@ -12,6 +10,8 @@ namespace HeavyEngine.Logging {
         public ConsoleColor InfoColor { get; set; }
         public ConsoleColor WarningColor { get; set; }
         public string LogFilePath { get; set; }
+
+        public void Initialize() { }
 
         public void Log(string message) => Append(message);
         public void Log(string message, object context) => Append(message, context);

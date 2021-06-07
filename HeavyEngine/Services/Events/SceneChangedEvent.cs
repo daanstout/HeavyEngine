@@ -1,3 +1,3 @@
-﻿namespace HeavyEngine.Services {
+﻿namespace HeavyEngine {
     public class SceneChangedEvent : IEvent { }
 }

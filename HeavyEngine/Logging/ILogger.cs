@@ -1,16 +1,5 @@
-﻿using System;
-
-using HeavyEngine.Injection;
-
-namespace HeavyEngine.Logging {
+﻿namespace HeavyEngine.Logging {
     public interface ILogger : IService {
-        ConsoleColor LogColor { get; set; }
-        ConsoleColor ErrorColor { get; set; }
-        ConsoleColor FatalColor { get; set; }
-        ConsoleColor InfoColor { get; set; }
-        ConsoleColor WarningColor { get; set; }
-        string LogFilePath { get; set; }
-
         void Log(string message);
         void Log(string message, object context);
         void LogInfo(string message);

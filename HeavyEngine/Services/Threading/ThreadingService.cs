@@ -1,0 +1,99 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace HeavyEngine.Threading {
+    [Service(typeof(ThreadingService), ServiceTypes.Singleton)]
+    public class ThreadingService : IService, IThreadingService {
+        private const int DEFAULT_THREAD_SIZE = 4;
+
+        private class QueueItem {
+            public Action task;
+            public Action completionCallback;
+        }
+
+        [Dependency] private readonly IEventService eventService;
+
+        private IThreadTask[] threads;
+        private readonly Queue<QueueItem> tasks;
+        private int runningThreads;
+        private int targetThreadCount;
+
+        public ThreadingService() {
+            runningThreads = 0;
+            tasks = new Queue<QueueItem>();
+
+            threads = new IThreadTask[DEFAULT_THREAD_SIZE];
+
+            for (int i = 0; i < threads.Length; i++)
+                threads[i] = new ThreadTask();
+
+            runningThreads = 0;
+            targetThreadCount = DEFAULT_THREAD_SIZE;
+        }
+
+        ~ThreadingService() {
+            eventService.Unsubscribe<UpdateEvent>(Update);
+        }
+
+        public void Initialize() {
+            eventService.Subscribe<UpdateEvent>(Update);
+        }
+
+        public void SetThreadCount(int threadCount) {
+            targetThreadCount = threadCount;
+
+            if (runningThreads > threadCount) {
+                return;
+            }
+
+            var threads = new IThreadTask[threadCount];
+
+            for (int i = 0; i < threadCount; i++) {
+                if (i >= this.threads.Length)
+                    break;
+
+                threads[i] = this.threads[i];
+            }
+
+            this.threads = threads;
+        }
+
+        public void Update() {
+            foreach (var thread in threads) {
+                if (!thread.IsAvailable)
+                    thread.Update();
+            }
+
+            if (threads.Length > targetThreadCount && runningThreads < targetThreadCount)
+                SetThreadCount(targetThreadCount);
+
+            while (tasks.Count > 0 && runningThreads < targetThreadCount) {
+                var item = tasks.Dequeue();
+
+                var availableThread = FirstAvailableThread();
+
+                if (availableThread == null)
+                    break;
+
+                availableThread.Initialize(item.task, () => {
+                    runningThreads--;
+
+                    item.completionCallback?.Invoke();
+                });
+
+                runningThreads++;
+            }
+        }
+
+        public void QueueTask(Action task) {
+            tasks.Enqueue(new QueueItem() { task = task });
+        }
+
+        public void QueueTask(Action task, Action completionCallback) {
+            tasks.Enqueue(new QueueItem() { task = task, completionCallback = completionCallback });
+        }
+
+        private IThreadTask FirstAvailableThread() => threads.FirstOrDefault(thread => thread.IsAvailable);
+    }
+}

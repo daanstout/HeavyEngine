@@ -1,7 +1,5 @@
 ﻿using System;
 
-using HeavyEngine.Injection;
-
 namespace HeavyEngine.Logging {
     [Service(typeof(ILogger), ServiceTypes.Singleton, DependencyConstants.LOGGER_CONSOLE_LOGGER)]
     public class ConsoleLogger : ILogger {
@@ -11,6 +9,10 @@ namespace HeavyEngine.Logging {
         public ConsoleColor InfoColor { get; set; } = ConsoleColor.Green;
         public ConsoleColor WarningColor { get; set; } = ConsoleColor.Yellow;
         public string LogFilePath { get; set; }
+
+        private static readonly object syncRoot = new object();
+
+        public void Initialize() { }
 
         public void Log(string message) => Log(LogColor, message);
         public void Log(string message, object context) => Log(LogColor, message, context);
@@ -23,14 +25,18 @@ namespace HeavyEngine.Logging {
         public void LogWarning(string message) => Log(WarningColor, $"[WARNING] {message}");
         public void LogWarning(string message, object context) => Log(WarningColor, $"[WARNING] {message}", context);
 
-        private void Log(ConsoleColor color, string message) {
-            Console.ForegroundColor = color;
-            Console.WriteLine(message);
+        private static void Log(ConsoleColor color, string message) {
+            lock (syncRoot) {
+                Console.ForegroundColor = color;
+                Console.WriteLine(message);
+            }
         }
 
-        private void Log(ConsoleColor color, string message, object context) {
-            Console.ForegroundColor = color;
-            Console.WriteLine($"[{context.GetType().Name}] {message}");
+        private static void Log(ConsoleColor color, string message, object context) {
+            lock (syncRoot) {
+                Console.ForegroundColor = color;
+                Console.WriteLine($"[{context.GetType().Name}] {message}");
+            }
         }
     }
 }

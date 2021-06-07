@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using HeavyEngine.Injection;
-
-namespace HeavyEngine.Services {
+namespace HeavyEngine {
     [Service(typeof(IEventService), ServiceTypes.Singleton)]
     public class EventService : IService, IEventService {
         private class EventNode<TData> {
@@ -23,6 +21,8 @@ namespace HeavyEngine.Services {
         public EventService() {
             events = new Dictionary<Type, object>();
         }
+
+        public void Initialize() { }
 
         public void Subscribe<TEvent>(Action listener) where TEvent : IEvent {
             if (!events.ContainsKey(typeof(TEvent)))
@@ -47,10 +47,16 @@ namespace HeavyEngine.Services {
         }
 
         public void Invoke<TEvent>() where TEvent : IEvent {
+            if (!events.ContainsKey(typeof(TEvent)))
+                events.Add(typeof(TEvent), new EventNode());
+
             ((EventNode)events[typeof(TEvent)]).Invoke();
         }
 
         public void Invoke<TEvent, TData>(TData data) where TEvent : IEvent {
+            if (!events.ContainsKey(typeof(TEvent)))
+                events.Add(typeof(TEvent), new EventNode<TData>());
+
             ((EventNode<TData>)events[typeof(TEvent)]).Invoke(data);
         }
     }

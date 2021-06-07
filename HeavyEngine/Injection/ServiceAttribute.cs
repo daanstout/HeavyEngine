@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HeavyEngine.Injection {
+namespace HeavyEngine {
     [AttributeUsage(AttributeTargets.Class)]
     public class ServiceAttribute : Attribute {
         public Type BaseType { get; }

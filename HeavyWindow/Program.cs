@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 
 using HeavyEngine;
 
 using OpenTK.Mathematics;
-using OpenTK.Windowing.Desktop;
 
 namespace HeavyWindow {
     public class Program {

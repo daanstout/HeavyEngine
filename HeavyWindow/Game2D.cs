@@ -4,6 +4,7 @@ using System.Text;
 
 using HeavyEngine;
 using HeavyEngine.Injection;
+using HeavyEngine.Logging;
 using HeavyEngine.Rendering;
 
 using OpenTK.Graphics.ES30;
@@ -12,14 +13,14 @@ using OpenTK.Windowing.Desktop;
 
 namespace HeavyWindow {
     public class Game2D : Window {
-        private readonly ObjectRenderer renderer;
+        private readonly MeshRenderer renderer;
 
         public Game2D(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings) : base(gameWindowSettings, nativeWindowSettings) {
-            renderer = new ObjectRenderer();
+            renderer = new MeshRenderer();
         }
 
         protected override void SetupServices(IServiceLibrary services) {
-            services.BindTag(null, DependencyConstants.LOGGER_CONSOLE_LOGGER);
+            services.BindTag<ILogger>(null, DependencyConstants.LOGGER_CONSOLE_LOGGER);
             base.SetupServices(services);
         }
 

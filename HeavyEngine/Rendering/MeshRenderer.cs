@@ -3,7 +3,7 @@
 using OpenTK.Graphics.OpenGL4;
 
 namespace HeavyEngine.Rendering {
-    public class ObjectRenderer : IDisposable, IRenderer {
+    public class MeshRenderer : IDisposable, IRenderer {
         private Mesh Mesh;
         private Shader shader;
         private readonly VertexArrayObject VAO;
@@ -13,7 +13,7 @@ namespace HeavyEngine.Rendering {
 
         private bool disposed = false;
 
-        public ObjectRenderer() {
+        public MeshRenderer() {
             VBO = new VertexBufferObject();
             VAO = new VertexArrayObject();
             EBO = new ElementBufferObject();
@@ -21,7 +21,7 @@ namespace HeavyEngine.Rendering {
             CreateShader();
         }
 
-        ~ObjectRenderer() {
+        ~MeshRenderer() {
             Dispose(false);
         }
 
@@ -42,6 +42,8 @@ namespace HeavyEngine.Rendering {
         }
 
         public void CreateShader(string vertexPath = IRenderer.DEFAULT_VERTEX_SHADER_PATH, string fragmentPath = IRenderer.DEFAULT_FRAGMENT_SHADER_PATH) {
+            shader?.Unbind();
+            shader?.Dispose();
             shader = new Shader(vertexPath, fragmentPath);
         }
 

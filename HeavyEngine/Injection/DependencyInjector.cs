@@ -3,12 +3,17 @@ using System.Reflection;
 
 namespace HeavyEngine.Injection {
     public class DependencyInjector : IDependencyInjector {
+        /// <inheritdoc/>
         public IServiceLibrary Services { get; }
 
+        /// <summary>
+        /// Instantiates a new <see cref="DependencyInjector"/>
+        /// </summary>
         public DependencyInjector() {
             Services = new ServiceLibrary();
         }
 
+        /// <inheritdoc/>
         public void Inject(object obj) {
             if (obj == null)
                 throw new ArgumentNullException(obj.GetType().Name);
@@ -27,9 +32,7 @@ namespace HeavyEngine.Injection {
             if (field.GetValue(obj) != null)
                 return;
 
-            var service = Services.Get(field.FieldType, attribute.Tag);
-
-            Inject(service);
+            var service = Services.Get(this, field.FieldType, attribute.Tag);
 
             field.SetValue(obj, service);
         }

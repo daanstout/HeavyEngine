@@ -38,7 +38,7 @@ namespace HeavyEngine.Injection {
         /// <param name="tag">The first tag that the dependee will request</param>
         /// <param name="target">The tag that should be looked at if the first tag isn't present</param>
         /// <returns>True if the binding was succesfully added</returns>
-        bool BindTag(string tag, string target);
+        bool BindTag<TAbstract>(string tag, string target);
         /// <summary>
         /// Gets a service of the given type, potentially with the given tag.
         /// </summary>
@@ -46,6 +46,7 @@ namespace HeavyEngine.Injection {
         /// <param name="tag">The tag used to potentially specify which service exactly, if multiple of the same type exist.</param>
         /// <returns>The service requested.</returns>
         TAbstract Get<TAbstract>(string tag = null);
+        TAbstract Get<TAbstract>(IDependencyInjector injector, string tag = null);
         /// <summary>
         /// Gets a service of the given type, potentially with the given tag.
         /// </summary>
@@ -53,6 +54,7 @@ namespace HeavyEngine.Injection {
         /// <param name="tag">The tag used to potentially specify which service exactly, if multiple of the same type exist.</param>
         /// <returns>The service requested.</returns>
         object Get(Type type, string tag = null);
+        object Get(IDependencyInjector injector, Type type, string tag = null);
         /// <summary>
         /// Finds all services that implement <see cref="IService"/> in the given assembly.
         /// <para>The services need to have the <see cref="ServiceAttribute"/>.</para>

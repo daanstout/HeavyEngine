@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HeavyEngine.Services {
+namespace HeavyEngine {
     public interface IEventService {
         void Invoke<TEvent, TData>(TData data) where TEvent : IEvent;
         void Invoke<TEvent>() where TEvent : IEvent;

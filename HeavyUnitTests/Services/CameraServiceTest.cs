@@ -3,7 +3,6 @@ using System.Reflection;
 
 using HeavyEngine;
 using HeavyEngine.Logging;
-using HeavyEngine.Services;
 
 using Moq;
 
