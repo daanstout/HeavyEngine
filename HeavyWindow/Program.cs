@@ -9,8 +9,8 @@ namespace HeavyWindow {
         private static void Main(string[] args) {
             Console.WriteLine("Starting up");
 
-            //TestGame();
-            Game2D();
+            TestGame();
+            //Game2D();
         }
 
         private static void TestGame() {

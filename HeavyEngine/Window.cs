@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Reflection;
 
 using HeavyEngine.Injection;
@@ -12,6 +13,8 @@ namespace HeavyEngine {
     public class Window : GameWindow {
         [Dependency] private protected readonly IEventService eventService;
         [Dependency] private protected readonly ITimeService timeService;
+        [Dependency] private protected readonly ICoroutineService coroutineService;
+        [Dependency] private protected readonly ILogger logger;
 
         public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings) : base(gameWindowSettings, nativeWindowSettings) {
             SetupServices(DependencyObtainer.PrimaryInjector.Services);
@@ -23,6 +26,8 @@ namespace HeavyEngine {
             services.SetupSelf();
 
             DependencyObtainer.PrimaryInjector.Inject(this);
+
+            coroutineService.StartCoroutine(Coroutine());
         }
 
         protected override void OnUpdateFrame(FrameEventArgs args) {
@@ -50,6 +55,14 @@ namespace HeavyEngine {
             };
 
             return settings;
+        }
+
+        private IEnumerator Coroutine() {
+            var rand = new Random();
+            yield return null;
+            yield return null;
+            yield return null;
+            logger.Log("Now");
         }
     }
 }

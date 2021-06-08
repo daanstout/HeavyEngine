@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 namespace HeavyEngine.Injection {
-    internal struct ServiceIdentifier : IEquatable<ServiceIdentifier> {
+    internal class ServiceIdentifier : IEquatable<ServiceIdentifier> {
         public Type Type { get; set; }
         public string Tag { get; set; }
 

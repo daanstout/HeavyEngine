@@ -5,17 +5,16 @@ using System.Reflection;
 
 namespace HeavyEngine.Injection {
     public class ServiceLibrary : IServiceLibrary {
-        private struct Binding : IEquatable<Binding> {
+        private class Binding : IEquatable<Binding> {
             public Type BaseType { get; set; }
-            public bool HasBinding { get; set; }
             public string Tag { get; set; }
             public string Target { get; set; }
 
-            public override bool Equals(object obj) => obj is Binding binding && Equals(binding);
-            public bool Equals(Binding other) => EqualityComparer<Type>.Default.Equals(BaseType, other.BaseType) && Tag == other.Tag;
-            public override int GetHashCode() => HashCode.Combine(BaseType, Tag);
+            public override bool Equals(object obj) => Equals(obj as Binding);
+            public bool Equals(Binding other) => other != null && EqualityComparer<Type>.Default.Equals(BaseType, other.BaseType) && Tag == other.Tag && Target == other.Target;
+            public override int GetHashCode() => HashCode.Combine(BaseType, Tag, Target);
 
-            public static bool operator ==(Binding left, Binding right) => left.Equals(right);
+            public static bool operator ==(Binding left, Binding right) => EqualityComparer<Binding>.Default.Equals(left, right);
             public static bool operator !=(Binding left, Binding right) => !(left == right);
         }
 
@@ -103,12 +102,13 @@ namespace HeavyEngine.Injection {
             var binding = new Binding {
                 BaseType = typeof(TAbstract),
                 Tag = tag,
-                Target = target,
-                HasBinding = true
+                Target = target
             };
 
             return bindings.Add(binding);
         }
+
+        public bool UnbindTag<TAbstract>(string tag, string target) => bindings.RemoveWhere(binding => binding.BaseType == typeof(TAbstract) && binding.Tag == tag && binding.Target == target) > 0;
 
         public void FindServices(Assembly assembly) {
             foreach (var type in assembly.GetTypes()) {
@@ -172,34 +172,39 @@ namespace HeavyEngine.Injection {
             if (services.ContainsKey(identifier))
                 return services[identifier].Get();
 
-            var binding = bindings.FirstOrDefault(b => b.Tag == identifier.Tag && b.BaseType == identifier.Type);
+            var originalTag = identifier.Tag;
 
-            if (!binding.HasBinding)
-                throw new ArgumentException($"Service for type: {identifier.Type} with tag: {identifier.Tag} has not been registered yet and no binding has been registered");
+            while (GetBoundIdentifier(identifier)) {
+                if (services.ContainsKey(identifier))
+                    return services[identifier].Get();
+            }
 
-            identifier.Tag = binding.Target;
-
-            if (services.ContainsKey(identifier))
-                return services[identifier].Get();
-
-            throw new ArgumentException($"Service for type: {identifier.Type} with binding tag: {identifier.Tag} (original: {binding.Tag}) has not been registered");
+            throw new ArgumentException($"Service for type: {identifier.Type} with binding tag: {identifier.Tag} (original: {originalTag}) has not been registered");
         }
 
         private object Get(IDependencyInjector injector, ServiceIdentifier identifier) {
             if (services.ContainsKey(identifier))
                 return services[identifier].Get(injector);
 
+            var originalTag = identifier.Tag;
+
+            while (GetBoundIdentifier(identifier)) {
+                if (services.ContainsKey(identifier))
+                    return services[identifier].Get(injector);
+            }
+
+            throw new ArgumentException($"Service for type: {identifier.Type} with binding tag: {identifier.Tag} (original: {originalTag}) has not been registered");
+        }
+
+        private bool GetBoundIdentifier(ServiceIdentifier identifier) {
             var binding = bindings.FirstOrDefault(b => b.Tag == identifier.Tag && b.BaseType == identifier.Type);
 
-            if (!binding.HasBinding)
-                throw new ArgumentException($"Service for type: {identifier.Type} with tag: {identifier.Tag} has not been registered yet and no binding has been registered");
+            if (binding == null)
+                return false;
 
             identifier.Tag = binding.Target;
 
-            if (services.ContainsKey(identifier))
-                return services[identifier].Get(injector);
-
-            throw new ArgumentException($"Service for type: {identifier.Type} with binding tag: {identifier.Tag} (original: {binding.Tag}) has not been registered");
+            return true;
         }
 
         private void OnSceneChanged() {

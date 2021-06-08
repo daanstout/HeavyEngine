@@ -39,6 +39,7 @@ namespace HeavyEngine.Injection {
         /// <param name="target">The tag that should be looked at if the first tag isn't present</param>
         /// <returns>True if the binding was succesfully added</returns>
         bool BindTag<TAbstract>(string tag, string target);
+        bool UnbindTag<TAbstract>(string tag, string target);
         /// <summary>
         /// Gets a service of the given type, potentially with the given tag.
         /// </summary>

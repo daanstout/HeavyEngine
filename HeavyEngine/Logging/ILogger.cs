@@ -1,5 +1,5 @@
 ﻿namespace HeavyEngine.Logging {
-    public interface ILogger : IService {
+    public interface ILogger {
         void Log(string message);
         void Log(string message, object context);
         void LogInfo(string message);

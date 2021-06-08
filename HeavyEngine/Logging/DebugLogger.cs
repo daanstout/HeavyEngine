@@ -1,8 +1,8 @@
 ﻿using System;
 
 namespace HeavyEngine.Logging {
-    [Service(typeof(ILogger), ServiceTypes.Singleton, DependencyConstants.LOGGER_CONSOLE_LOGGER)]
-    public class ConsoleLogger : ILogger, IService {
+    [Service(typeof(ILogger), ServiceTypes.Singleton, DependencyConstants.LOGGER_DEBUG_LOGGER)]
+    class DebugLogger : ILogger, IService {
         public ConsoleColor LogColor { get; set; } = ConsoleColor.White;
         public ConsoleColor ErrorColor { get; set; } = ConsoleColor.Red;
         public ConsoleColor FatalColor { get; set; } = ConsoleColor.DarkMagenta;
@@ -24,17 +24,21 @@ namespace HeavyEngine.Logging {
         public void LogWarning(string message, object context) => Log(WarningColor, $"[WARNING] {message}", context);
 
         private static void Log(ConsoleColor color, string message) {
+#if DEBUG
             lock (syncRoot) {
                 Console.ForegroundColor = color;
                 Console.WriteLine(message);
             }
+#endif
         }
 
         private static void Log(ConsoleColor color, string message, object context) {
+#if DEBUG
             lock (syncRoot) {
                 Console.ForegroundColor = color;
                 Console.WriteLine($"[{context.GetType().Name}] {message}");
             }
+#endif
         }
     }
 }
