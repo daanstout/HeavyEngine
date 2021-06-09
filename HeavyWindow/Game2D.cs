@@ -43,7 +43,11 @@ namespace HeavyWindow {
 
         public void SetMesh(Mesh mesh) => renderer.SetMesh(mesh);
 
-        public void AddTexture(string path) => renderer.CreateTexture(path);
+        public void AddTexture(string path) => renderer.CreateTexture1(path);
+
+        public void AddTexture2(string path) => renderer.CreateTexture2(path);
+
+        public Transform GetRendererTransform() => renderer.Transform;
 
         public void CreateShaders(string vertexShader, string fragmentShader) => renderer.CreateShader(vertexShader, fragmentShader);
     }

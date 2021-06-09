@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace HeavyEngine {
     public class Mesh {
@@ -22,6 +23,40 @@ namespace HeavyEngine {
             }
 
             return arr;
+        }
+
+        /// <summary>
+        /// Flattens a list of vertices into a mesh that uses indices, keeping the order the same
+        /// </summary>
+        /// <param name="vertices">The list of vertices to flatten</param>
+        /// <returns>A mesh with the vertices flattened</returns>
+        public static Mesh Flatten(IEnumerable<Vertex> vertices) {
+            var uniqueVertices = new List<Vertex>();
+            var indices = new List<uint>();
+            var vertexDictionary = new Dictionary<Vertex, uint>();
+
+            foreach (var vertex in vertices) {
+                if (!vertexDictionary.ContainsKey(vertex)) {
+                    vertexDictionary.Add(vertex, (uint)uniqueVertices.Count);
+                    uniqueVertices.Add(vertex);
+                }
+
+                indices.Add(vertexDictionary[vertex]);
+            }
+
+            return new Mesh {
+                Indices = indices.ToArray(),
+                Vertices = uniqueVertices.ToArray()
+            };
+        }
+
+        public static Vertex[] Unflatten(Mesh mesh) {
+            var vertices = new Vertex[mesh.Indices.Length];
+
+            for(int i = 0; i < mesh.Indices.Length; i++)
+                vertices[i] = mesh.Vertices[mesh.Indices[i]];
+
+            return vertices;
         }
     }
 }

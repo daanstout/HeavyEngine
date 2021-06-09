@@ -13,6 +13,14 @@ namespace HeavyEngine.Injection {
             Services = new ServiceLibrary();
         }
 
+        /// <summary>
+        /// Instantiates a new <see cref="DependencyInjector"/> with a provided <see cref="IServiceLibrary"/>
+        /// </summary>
+        /// <param name="serviceLibrary">The <see cref="IServiceLibrary"/> that the injector should use</param>
+        public DependencyInjector(IServiceLibrary serviceLibrary) {
+            Services = serviceLibrary;
+        }
+
         /// <inheritdoc/>
         public void Inject(object obj) {
             if (obj == null)
@@ -22,10 +30,10 @@ namespace HeavyEngine.Injection {
             var fields = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
             foreach (var field in fields)
-                Inject(obj, field, field.GetCustomAttribute<DependencyAttribute>());
+                InjectField(obj, field, field.GetCustomAttribute<DependencyAttribute>());
         }
 
-        private void Inject(object obj, FieldInfo field, DependencyAttribute attribute) {
+        private void InjectField(object obj, FieldInfo field, DependencyAttribute attribute) {
             if (attribute == null)
                 return;
 

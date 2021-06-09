@@ -1,19 +1,25 @@
 ﻿using System;
 
 using OpenTK.Graphics.OpenGL4;
+using OpenTK.Mathematics;
 
 namespace HeavyEngine.Rendering {
     public class MeshRenderer : IDisposable, IRenderer {
+        public Transform Transform { get; }
+
         private Mesh Mesh;
         private Shader shader;
         private readonly VertexArrayObject VAO;
         private readonly VertexBufferObject VBO;
         private readonly ElementBufferObject EBO;
         private Texture texture;
+        private Texture texture2;
 
         private bool disposed = false;
 
         public MeshRenderer() {
+            Transform = new Transform();
+
             VBO = new VertexBufferObject();
             VAO = new VertexArrayObject();
             EBO = new ElementBufferObject();
@@ -25,8 +31,12 @@ namespace HeavyEngine.Rendering {
             Dispose(false);
         }
 
-        public void CreateTexture(string path) {
+        public void CreateTexture1(string path) {
             texture = Texture.LoadFromFile(path);
+        }
+
+        public void CreateTexture2(string path) {
+            texture2 = Texture.LoadFromFile(path);
         }
 
         public void SetMesh(Mesh mesh) {
@@ -55,8 +65,12 @@ namespace HeavyEngine.Rendering {
                 return;
 
             VAO.Bind();
-            texture?.Bind();
+            texture?.Bind(TextureUnit.Texture0);
+            texture2?.Bind(TextureUnit.Texture1);
             shader.Bind();
+            shader.SetInt("texture0", 0);
+            shader.SetInt("texture1", 1);
+            shader.SetMat4("transform", Transform.TransMatrix);
             //EBO.Bind();
             //GL.DrawArrays(PrimitiveType.Triangles, 0, Mesh.Vertices.Length);
             GL.DrawElements(PrimitiveType.Triangles, Mesh.Indices.Length, DrawElementsType.UnsignedInt, new IntPtr(0));

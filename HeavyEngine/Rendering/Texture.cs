@@ -24,6 +24,7 @@ namespace HeavyEngine.Rendering {
             texture.Bind();
 
             using var image = new Bitmap(path);
+            image.RotateFlip(RotateFlipType.RotateNoneFlipY);
             var data = image.LockBits(new Rectangle(0, 0, image.Width, image.Height), ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppRgb);
 
             GL.TexImage2D(TextureTarget.Texture2D,

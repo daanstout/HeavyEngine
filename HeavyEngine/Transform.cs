@@ -39,6 +39,7 @@ namespace HeavyEngine {
             get {
                 if (dirty)
                     transMatrix = Matrix4.CreateTranslation(position) * Matrix4.CreateFromQuaternion(rotation) * Matrix4.CreateScale(scale);
+                    //transMatrix = Matrix4.CreateScale(scale) * Matrix4.CreateFromQuaternion(rotation) * Matrix4.CreateTranslation(position);
 
                 return transMatrix;
             }

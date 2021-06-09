@@ -127,6 +127,33 @@ namespace HeavyEngine.Injection {
             eventService.Subscribe<SceneChangedEvent>(OnSceneChanged);
         }
 
+        public void OverrideSingleton<TAbstract, TImplementation>(string tag = null) where TImplementation : class, new() {
+            var identifier = new ServiceIdentifier {
+                Type = typeof(TAbstract),
+                Tag = tag
+            };
+
+            OverrideService(identifier, new SingletonContainer<TImplementation>());
+        }
+        
+        public void OverrideScoped<TAbstract, TImplementation>(string tag = null) where TImplementation : class, new() {
+            var identifier = new ServiceIdentifier {
+                Type = typeof(TAbstract),
+                Tag = tag
+            };
+
+            OverrideService(identifier, new ScopedContainer<TImplementation>());
+        }
+
+        public void OverrideTransient<TAbstract, TImplementation>(string tag = null) where TImplementation : class, new() {
+            var identifier = new ServiceIdentifier {
+                Type = typeof(TAbstract),
+                Tag = tag
+            };
+
+            OverrideService(identifier, new TransientContainer<TImplementation>());
+        }
+
         private void RegisterServicesForType(Type type) {
             var attrib = type.GetCustomAttribute<ServiceAttribute>();
 
@@ -194,6 +221,10 @@ namespace HeavyEngine.Injection {
             }
 
             throw new ArgumentException($"Service for type: {identifier.Type} with binding tag: {identifier.Tag} (original: {originalTag}) has not been registered");
+        }
+        
+        private void OverrideService(ServiceIdentifier identifier, IServiceContainer<object> container) {
+            services[identifier] = container;
         }
 
         private bool GetBoundIdentifier(ServiceIdentifier identifier) {
