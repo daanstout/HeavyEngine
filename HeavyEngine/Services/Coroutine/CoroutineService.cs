@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace HeavyEngine {
     [Service(typeof(ICoroutineService), ServiceTypes.Singleton)]
-    public class CoroutineService : IService, ICoroutineService {
+    public sealed class CoroutineService : IService, ICoroutineService {
         [Dependency] private readonly IEventService eventService;
         [Dependency] private readonly ITimeService timeService;
 

@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace HeavyEngine.Injection {
     public class ServiceLibrary : IServiceLibrary {
-        private class Binding : IEquatable<Binding> {
+        protected class Binding : IEquatable<Binding> {
             public Type BaseType { get; set; }
             public string Tag { get; set; }
             public string Target { get; set; }
@@ -18,13 +18,13 @@ namespace HeavyEngine.Injection {
             public static bool operator !=(Binding left, Binding right) => !(left == right);
         }
 
-        private readonly Dictionary<ServiceIdentifier, IServiceContainer<object>> services;
-        private readonly List<IServiceContainer<object>> scopedServices;
-        private readonly HashSet<Binding> bindings;
+        protected readonly Dictionary<ServiceIdentifier, IServiceContainer<object>> services;
+        protected readonly List<IServiceContainer<object>> scopedServices;
+        protected readonly HashSet<Binding> bindings;
 
-        private IEventService eventService;
+        protected IEventService eventService;
 
-        internal ServiceLibrary() {
+        public ServiceLibrary() {
             services = new Dictionary<ServiceIdentifier, IServiceContainer<object>>();
             bindings = new HashSet<Binding>();
         }
@@ -154,7 +154,7 @@ namespace HeavyEngine.Injection {
             OverrideService(identifier, new TransientContainer<TImplementation>());
         }
 
-        private void RegisterServicesForType(Type type) {
+        protected void RegisterServicesForType(Type type) {
             var attrib = type.GetCustomAttribute<ServiceAttribute>();
 
             if (attrib == null)
@@ -188,14 +188,14 @@ namespace HeavyEngine.Injection {
             services.Add(identifier, container);
         }
 
-        private void Add(ServiceIdentifier identifier, IServiceContainer<object> container) {
+        protected void Add(ServiceIdentifier identifier, IServiceContainer<object> container) {
             if (services.ContainsKey(identifier))
                 throw new ArgumentException();
 
             services.Add(identifier, container);
         }
 
-        private object Get(ServiceIdentifier identifier) {
+        protected object Get(ServiceIdentifier identifier) {
             if (services.ContainsKey(identifier))
                 return services[identifier].Get();
 
@@ -209,7 +209,7 @@ namespace HeavyEngine.Injection {
             throw new ArgumentException($"Service for type: {identifier.Type} with binding tag: {identifier.Tag} (original: {originalTag}) has not been registered");
         }
 
-        private object Get(IDependencyInjector injector, ServiceIdentifier identifier) {
+        protected object Get(IDependencyInjector injector, ServiceIdentifier identifier) {
             if (services.ContainsKey(identifier))
                 return services[identifier].Get(injector);
 
@@ -222,12 +222,12 @@ namespace HeavyEngine.Injection {
 
             throw new ArgumentException($"Service for type: {identifier.Type} with binding tag: {identifier.Tag} (original: {originalTag}) has not been registered");
         }
-        
-        private void OverrideService(ServiceIdentifier identifier, IServiceContainer<object> container) {
+
+        protected void OverrideService(ServiceIdentifier identifier, IServiceContainer<object> container) {
             services[identifier] = container;
         }
 
-        private bool GetBoundIdentifier(ServiceIdentifier identifier) {
+        protected bool GetBoundIdentifier(ServiceIdentifier identifier) {
             var binding = bindings.FirstOrDefault(b => b.Tag == identifier.Tag && b.BaseType == identifier.Type);
 
             if (binding == null)
@@ -238,7 +238,7 @@ namespace HeavyEngine.Injection {
             return true;
         }
 
-        private void OnSceneChanged() {
+        protected void OnSceneChanged() {
             foreach (var container in scopedServices)
                 container.Reset();
         }

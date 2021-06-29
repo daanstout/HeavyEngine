@@ -33,7 +33,7 @@ namespace HeavyEngine.Injection {
                 InjectField(obj, field, field.GetCustomAttribute<DependencyAttribute>());
         }
 
-        private void InjectField(object obj, FieldInfo field, DependencyAttribute attribute) {
+        protected void InjectField(object obj, FieldInfo field, DependencyAttribute attribute) {
             if (attribute == null)
                 return;
 

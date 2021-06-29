@@ -1,5 +1,5 @@
 ﻿namespace HeavyEngine.Injection {
-    public class ScopedContainer<T> : IServiceContainer<T> where T : class, new() {
+    public sealed class ScopedContainer<T> : IServiceContainer<T> where T : class, new() {
         private T instance;
         private bool injected = false;
 

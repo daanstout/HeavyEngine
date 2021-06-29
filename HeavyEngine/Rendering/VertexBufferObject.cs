@@ -9,7 +9,6 @@ namespace HeavyEngine.Rendering {
 
         public VertexBufferObject() {
             id = GL.GenBuffer();
-            Bind();
         }
 
         ~VertexBufferObject() {
@@ -17,6 +16,7 @@ namespace HeavyEngine.Rendering {
         }
 
         public void SetData(Mesh mesh) {
+            Bind();
             GL.BufferData(BufferTarget.ArrayBuffer, mesh.Vertices.Length * Vertex.VERTEX_SIZE * sizeof(float), mesh.GetArray(), BufferUsageHint.StaticDraw);
         }
 

@@ -1,5 +1,5 @@
 ﻿namespace HeavyEngine.Injection {
-    public class TransientContainer<T> : IServiceContainer<T> where T : class, new() {
+    public sealed class TransientContainer<T> : IServiceContainer<T> where T : class, new() {
         public T Get() => new T();
         public T Get(IDependencyInjector injector) {
             var instance = new T();

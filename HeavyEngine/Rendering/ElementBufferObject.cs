@@ -9,7 +9,6 @@ namespace HeavyEngine.Rendering {
 
         public ElementBufferObject() {
             id = GL.GenBuffer();
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, id);
         }
 
         ~ElementBufferObject() {
@@ -17,6 +16,7 @@ namespace HeavyEngine.Rendering {
         }
 
         public void SetData(Mesh mesh) {
+            Bind();
             GL.BufferData(BufferTarget.ElementArrayBuffer, mesh.Indices.Length * sizeof(uint), mesh.Indices, BufferUsageHint.StaticDraw);
         }
 

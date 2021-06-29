@@ -1,3 +1,3 @@
 ﻿namespace HeavyEngine {
-    public class UpdateEvent : IEvent { }
+    public sealed class UpdateEvent : IEvent { }
 }

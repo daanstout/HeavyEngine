@@ -7,8 +7,8 @@ using OpenTK.Mathematics;
 
 namespace HeavyEngine.Rendering.Sprites {
     public class SpriteSheet {
-        private readonly Bitmap sheet;
-        private Vector2i size;
+        //private readonly Bitmap sheet;
+        //private Vector2i size;
 
         private SpriteSheet() { }
 

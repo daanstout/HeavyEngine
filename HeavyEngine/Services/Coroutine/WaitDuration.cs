@@ -2,7 +2,7 @@
 using System.Collections;
 
 namespace HeavyEngine {
-    public class WaitDuration : IEnumerator {
+    public sealed class WaitDuration : IEnumerator {
         public object Current => null;
         public float Duration { get; set; }
 

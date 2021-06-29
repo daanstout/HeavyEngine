@@ -1,25 +1,19 @@
 ﻿using System;
 
 using OpenTK.Graphics.OpenGL4;
-using OpenTK.Mathematics;
 
 namespace HeavyEngine.Rendering {
-    public class MeshRenderer : IDisposable, IRenderer {
-        public Transform Transform { get; }
-
+    public class MeshRenderer : Component, IDisposable, IRenderer, IRenderable {
         private Mesh Mesh;
         private Shader shader;
         private readonly VertexArrayObject VAO;
         private readonly VertexBufferObject VBO;
         private readonly ElementBufferObject EBO;
-        private Texture texture;
-        private Texture texture2;
+        public Texture2D Texture { get; private set; }
 
         private bool disposed = false;
 
         public MeshRenderer() {
-            Transform = new Transform();
-
             VBO = new VertexBufferObject();
             VAO = new VertexArrayObject();
             EBO = new ElementBufferObject();
@@ -31,12 +25,26 @@ namespace HeavyEngine.Rendering {
             Dispose(false);
         }
 
-        public void CreateTexture1(string path) {
-            texture = Texture.LoadFromFile(path);
+        public void CreateTexture(int width, int height) {
+            Texture = new Texture2D(width, height);
         }
 
-        public void CreateTexture2(string path) {
-            texture2 = Texture.LoadFromFile(path);
+        public void CreateTexture() {
+            Texture = new Texture2D();
+        }
+
+        public void CreateTexture(string path) {
+            Texture = new Texture2D(path) {
+                GenerateMipmaps = true,
+                TextureUnit = TextureUnit.Texture0
+            };
+            Texture.Apply();
+        }
+
+        public void SetTexture(Texture2D texture) {
+            this.Texture?.Dispose();
+            this.Texture = texture;
+            this.Texture.Apply();
         }
 
         public void SetMesh(Mesh mesh) {
@@ -65,12 +73,11 @@ namespace HeavyEngine.Rendering {
                 return;
 
             VAO.Bind();
-            texture?.Bind(TextureUnit.Texture0);
-            texture2?.Bind(TextureUnit.Texture1);
+            Texture?.Bind();
             shader.Bind();
-            shader.SetInt("texture0", 0);
-            shader.SetInt("texture1", 1);
-            shader.SetMat4("transform", Transform.TransMatrix);
+            //shader.SetInt("texture0", 0);
+            //shader.SetInt("texture1", 1);
+            //shader.SetMat4("transform", Transform.TransMatrix);
             //EBO.Bind();
             //GL.DrawArrays(PrimitiveType.Triangles, 0, Mesh.Vertices.Length);
             GL.DrawElements(PrimitiveType.Triangles, Mesh.Indices.Length, DrawElementsType.UnsignedInt, new IntPtr(0));
@@ -89,7 +96,7 @@ namespace HeavyEngine.Rendering {
             VAO.Dispose();
             VBO.Dispose();
             EBO.Dispose();
-            texture?.Dispose();
+            Texture?.Dispose();
 
             disposed = true;
         }

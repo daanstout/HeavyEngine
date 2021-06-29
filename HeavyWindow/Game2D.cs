@@ -32,20 +32,20 @@ namespace HeavyWindow {
 
         protected override void OnRenderFrame(FrameEventArgs args) {
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+            base.OnRenderFrame(args);
 
             renderer.Render();
 
             SwapBuffers();
-            base.OnRenderFrame(args);
         }
 
         protected override void OnUnload() => renderer.Dispose();
 
         public void SetMesh(Mesh mesh) => renderer.SetMesh(mesh);
 
-        public void AddTexture(string path) => renderer.CreateTexture1(path);
+        public void AddTexture(string path) => renderer.CreateTexture(path);
 
-        public void AddTexture2(string path) => renderer.CreateTexture2(path);
+        public void AddTexture2(string path) => renderer.CreateTexture(path);
 
         public Transform GetRendererTransform() => renderer.Transform;
 

@@ -2,7 +2,7 @@
 
 namespace HeavyEngine {
     [AttributeUsage(AttributeTargets.Class)]
-    public class ServiceAttribute : Attribute {
+    public sealed class ServiceAttribute : Attribute {
         public Type BaseType { get; }
         public ServiceTypes ServiceType { get; }
         public string Tag { get; }

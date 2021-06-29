@@ -12,7 +12,6 @@ namespace HeavyEngine.Rendering {
         public VertexArrayObject() {
             id = GL.GenVertexArray();
             partitions = new List<int>();
-            Bind();
         }
 
         ~VertexArrayObject() {
@@ -24,6 +23,7 @@ namespace HeavyEngine.Rendering {
         }
 
         public void SetData() {
+            Bind();
             int offset = 0;
             for (int i = 0; i < partitions.Count; i++) {
                 GL.EnableVertexAttribArray(i);

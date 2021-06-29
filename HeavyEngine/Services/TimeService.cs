@@ -2,7 +2,7 @@
 
 namespace HeavyEngine {
     [Service(typeof(ITimeService), ServiceTypes.Singleton)]
-    public class TimeService : IService, ITimeService {
+    public sealed class TimeService : IService, ITimeService {
         public double TimeScale { get; set; } = 1;
         public float DeltaTime { get; private set; }
         public double DeltaDouble { get; private set; }

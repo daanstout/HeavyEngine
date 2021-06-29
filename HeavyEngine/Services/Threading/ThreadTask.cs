@@ -2,7 +2,7 @@
 using System.Threading;
 
 namespace HeavyEngine.Threading {
-    public class ThreadTask : IThreadTask {
+    public sealed class ThreadTask : IThreadTask {
         private Thread thread;
         private Action onCompleteCallback;
 

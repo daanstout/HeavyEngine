@@ -3,7 +3,7 @@ using System.IO;
 
 namespace HeavyEngine.Logging {
     [Service(typeof(ILogger), ServiceTypes.Singleton, DependencyConstants.LOGGER_FILE_LOGGER)]
-    public class FileLogger : ILogger, IService {
+    public sealed class FileLogger : ILogger, IService {
         public ConsoleColor LogColor { get; set; }
         public ConsoleColor ErrorColor { get; set; }
         public ConsoleColor FatalColor { get; set; }

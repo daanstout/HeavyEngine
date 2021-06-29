@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace HeavyEngine.Threading {
     [Service(typeof(ThreadingService), ServiceTypes.Singleton)]
-    public class ThreadingService : IService, IThreadingService {
+    public sealed class ThreadingService : IService, IThreadingService {
         private const int DEFAULT_THREAD_SIZE = 4;
 
         private class QueueItem {

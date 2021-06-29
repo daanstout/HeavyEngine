@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace HeavyEngine {
     [Service(typeof(IEventService), ServiceTypes.Singleton)]
-    public class EventService : IService, IEventService {
+    public sealed class EventService : IService, IEventService {
         private class EventNode<TData> {
             public event Action<TData> evt;
 

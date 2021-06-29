@@ -1,5 +1,5 @@
 ﻿namespace HeavyEngine.Injection {
-    public class SingletonContainer<T> : IServiceContainer<T> where T : class, new() {
+    public sealed class SingletonContainer<T> : IServiceContainer<T> where T : class, new() {
         private readonly T instance;
         private bool injected = false;
 

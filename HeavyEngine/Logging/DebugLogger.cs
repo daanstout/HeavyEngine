@@ -2,7 +2,7 @@
 
 namespace HeavyEngine.Logging {
     [Service(typeof(ILogger), ServiceTypes.Singleton, DependencyConstants.LOGGER_DEBUG_LOGGER)]
-    class DebugLogger : ILogger, IService {
+    public sealed class DebugLogger : ILogger, IService {
         public ConsoleColor LogColor { get; set; } = ConsoleColor.White;
         public ConsoleColor ErrorColor { get; set; } = ConsoleColor.Red;
         public ConsoleColor FatalColor { get; set; } = ConsoleColor.DarkMagenta;

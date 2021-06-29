@@ -4,7 +4,7 @@ using HeavyEngine.Logging;
 
 namespace HeavyEngine {
     [Service(typeof(CameraService), ServiceTypes.Singleton)]
-    public class CameraService : IService {
+    public sealed class CameraService : IService {
         private readonly List<Camera> cameras;
         private Camera mainCamera;
         [Dependency] private readonly ILogger logger;

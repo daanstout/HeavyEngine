@@ -1,3 +1,3 @@
 ﻿namespace HeavyEngine {
-    public class SceneChangedEvent : IEvent { }
+    public sealed class SceneChangedEvent : IEvent { }
 }

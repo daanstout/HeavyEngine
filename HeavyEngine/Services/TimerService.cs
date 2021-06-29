@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace HeavyEngine {
     [Service(typeof(ITimerService), ServiceTypes.Singleton)]
-    public class TimerService : IService, ITimerService {
+    public sealed class TimerService : IService, ITimerService {
         private class TimedObject {
             public float timeRemaining;
             public Action action;

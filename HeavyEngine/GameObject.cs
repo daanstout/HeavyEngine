@@ -4,7 +4,7 @@ using HeavyEngine.Logging;
 using HeavyEngine.Rendering;
 
 namespace HeavyEngine {
-    public class GameObject : IUpdatable, IRenderable {
+    public class GameObject {
         public string Name { get; set; }
         public Transform Transform => transform;
 
@@ -12,27 +12,41 @@ namespace HeavyEngine {
         private readonly List<Component> components;
         private readonly List<IUpdatable> updatables;
         private readonly List<IRenderable> renderables;
+        private readonly List<IAwakable> awakables;
 
         [Dependency] protected ILogger logger;
 
-        protected GameObject() {
+        public GameObject() {
             DependencyObtainer.PrimaryInjector.Inject(this);
 
+            components = new List<Component>();
             updatables = new List<IUpdatable>();
             renderables = new List<IRenderable>();
+            awakables = new List<IAwakable>();
             transform = new Transform();
         }
 
-        public void AddComponent(Component component) {
-            if (!components.Contains(component)) {
+        public T AddComponent<T>(T component) where T : Component {
+            if (components.Contains(component)) {
                 logger.LogWarning($"Trying to add a component that already exists! {component.GetType().Name} - {component}", this);
-                return;
+                return default;
             }
 
             components.Add(component);
+            component.GameObject = this;
+            DependencyObtainer.PrimaryInjector.Inject(component);
+
+            if (component is IUpdatable updatable)
+                updatables.Add(updatable);
+
+            if (component is IRenderable renderable)
+                renderables.Add(renderable);
+
+            if (component is IAwakable awakable)
+                awakables.Add(awakable);
+
+            return component;
         }
-
-
 
         public T GetComponent<T>() where T : Component {
             for (int i = 0; i < components.Count; i++) {
@@ -71,12 +85,29 @@ namespace HeavyEngine {
             components.Remove(component);
         }
 
-        public void Update() {
+        public void AwakeGameObject() {
+            Awake();
+
+            for (int i = 0; i < awakables.Count; i++)
+                awakables[i].Awake();
+        }
+
+        protected virtual void Awake() {
+
+        }
+
+        public void UpdateGameObject() {
+            Update();
+
             for (int i = 0; i < updatables.Count; i++)
                 updatables[i].Update();
         }
 
-        public void Render() {
+        protected virtual void Update() {
+
+        }
+
+        public void RenderGameObject() {
             for (int i = 0; i < renderables.Count; i++)
                 renderables[i].Render();
         }

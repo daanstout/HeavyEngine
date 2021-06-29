@@ -5,7 +5,7 @@ namespace HeavyEngine {
     /// An attribute that can be used to indicate a field should be injected by the <see cref="IDependencyInjector"/>
     /// </summary>
     [AttributeUsage(AttributeTargets.Field)]
-    public class DependencyAttribute : Attribute {
+    public sealed class DependencyAttribute : Attribute {
         /// <summary>
         /// A tag that can be given to the dependency to get a certain instance of the dependency, instead of the default instance
         /// <para>If this value is <see langword="null"/>, the default instance will be used</para>

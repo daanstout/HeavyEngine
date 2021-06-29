@@ -1,7 +1,7 @@
 ﻿using OpenTK.Mathematics;
 
 namespace HeavyEngine {
-    public class Camera {
+    public sealed class Camera {
         public Transform Transform { get; }
         public float FoV { get; set; }
         public Vector2 Size { get; set; }
