@@ -14,38 +14,36 @@ namespace HeavyEngine {
         private Matrix4 transMatrix;
 
         private bool dirty = true;
-        private readonly List<Transform> children;
-        private Transform parent;
 
         public Vector3 Position {
             get => position;
             set {
+                dirty = true;
                 position = value;
-                AlignLocalWithParent();
             }
         }
 
         public Vector3 LocalPosition {
             get => localPosition;
             set {
+                dirty = true;
                 localPosition = value;
-                AlignGlobalWithParent();
             }
         }
 
         public Quaternion Rotation {
             get => rotation;
             set {
+                dirty = true;
                 rotation = value;
-                AlignLocalWithParent();
             }
         }
 
         public Quaternion LocalRotation {
             get => localRotation;
             set {
+                dirty = true;
                 localRotation = value;
-                AlignGlobalWithParent();
             }
         }
 
@@ -56,13 +54,10 @@ namespace HeavyEngine {
         public Vector3 LocalScale {
             get => localScale;
             set {
+                dirty = true;
                 localScale = value;
-                AlignGlobalWithParent();
             }
         }
-
-        public Transform Parent => parent;
-        public Transform[] Children => Children.ToArray();
 
         public Matrix4 View => Matrix4.CreateFromQuaternion(rotation) * Matrix4.CreateTranslation(position);
 
@@ -70,7 +65,6 @@ namespace HeavyEngine {
             get {
                 if (dirty)
                     transMatrix = Matrix4.CreateTranslation(position) * Matrix4.CreateFromQuaternion(rotation) * Matrix4.CreateScale(scale);
-                //transMatrix = Matrix4.CreateScale(scale) * Matrix4.CreateFromQuaternion(rotation) * Matrix4.CreateTranslation(position);
 
                 return transMatrix;
             }
@@ -84,46 +78,6 @@ namespace HeavyEngine {
             this.position = position;
             this.rotation = rotation;
             this.scale = scale;
-
-            children = new List<Transform>();
-        }
-
-        public void SetParent(Transform transform, bool keepGlobalPos = false) {
-            if (parent == transform)
-                return;
-
-            parent?.children.Remove(this);
-            parent = this;
-            parent?.children.Add(this);
-
-            if (keepGlobalPos)
-                AlignGlobalWithParent();
-            else
-                AlignLocalWithParent();
-        }
-
-        private void AlignLocalWithParent() {
-            dirty = true;
-
-            if (parent) {
-                localPosition = position - parent.position;
-                localRotation = Quaternion.Invert(parent.rotation) * rotation;
-            } else {
-                localPosition = position;
-                localRotation = rotation;
-                localScale = scale;
-            }
-        }
-
-        private void AlignGlobalWithParent() {
-            dirty = true;
-        }
-
-        private void ApplyChangesDownstream() {
-            foreach (var child in children) {
-                child.AlignLocalWithParent();
-                child.ApplyChangesDownstream();
-            }
         }
 
         public static implicit operator bool(Transform transform) => transform != null;

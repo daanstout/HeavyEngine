@@ -8,6 +8,7 @@ namespace HeavyEngine {
         public string Name => GameObject.Name;
         public Transform Transform => GameObject.Transform;
 
+        public virtual void OnAdded() { }
         public T AddComponent<T>(T component) where T : Component => GameObject.AddComponent(component);
         public T GetComponent<T>() where T : Component => GameObject.GetComponent<T>();
         public T[] GetComponents<T>() where T : Component => GameObject.GetComponents<T>();

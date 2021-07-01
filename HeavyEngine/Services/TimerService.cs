@@ -7,6 +7,7 @@ namespace HeavyEngine {
         private class TimedObject {
             public float timeRemaining;
             public Action action;
+            public bool useScaledTime;
         }
 
         [Dependency] private readonly ITimeService timeService;
@@ -22,12 +23,12 @@ namespace HeavyEngine {
             eventService.Subscribe<UpdateEvent>(Update);
         }
 
-        public void StartTimer(float time, Action action) => timedObjects.Add(new TimedObject() { timeRemaining = time, action = action });
+        public void StartTimer(float time, Action action, bool useScaledTime) => timedObjects.Add(new TimedObject() { timeRemaining = time, action = action, useScaledTime = useScaledTime });
 
         private void Update() {
             var objectsToRemove = new List<TimedObject>();
             foreach (var timedObject in timedObjects) {
-                timedObject.timeRemaining -= timeService.DeltaTime;
+                timedObject.timeRemaining -= (timedObject.useScaledTime ? timeService.DeltaTime : timeService.UnscaledDeltaTime);
 
                 if (timedObject.timeRemaining < 0.0f)
                     objectsToRemove.Add(timedObject);

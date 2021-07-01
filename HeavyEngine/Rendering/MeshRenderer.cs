@@ -1,6 +1,7 @@
 ﻿using System;
 
 using OpenTK.Graphics.OpenGL4;
+using OpenTK.Mathematics;
 
 namespace HeavyEngine.Rendering {
     public class MeshRenderer : Component, IDisposable, IRenderer, IRenderable {
@@ -65,7 +66,7 @@ namespace HeavyEngine.Rendering {
             shader = new Shader(vertexPath, fragmentPath);
         }
 
-        public void Render() {
+        public void Render(Camera camera) {
             if (Mesh == null)
                 return;
 
@@ -77,9 +78,10 @@ namespace HeavyEngine.Rendering {
             shader.Bind();
             //shader.SetInt("texture0", 0);
             //shader.SetInt("texture1", 1);
-            //shader.SetMat4("transform", Transform.TransMatrix);
-            //EBO.Bind();
-            //GL.DrawArrays(PrimitiveType.Triangles, 0, Mesh.Vertices.Length);
+            shader.TrySetMat4("transform", Transform.TransMatrix);
+            shader.TrySetMat4("view", camera.Transform.TransMatrix);
+            shader.TrySetMat4("projection", camera.Projection);
+
             GL.DrawElements(PrimitiveType.Triangles, Mesh.Indices.Length, DrawElementsType.UnsignedInt, new IntPtr(0));
         }
 

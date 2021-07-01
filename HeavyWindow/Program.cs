@@ -24,7 +24,7 @@ namespace HeavyWindow {
             using var game = new Game2D(Window.CreateDefaultGameWindowSettings(), Window.CreateDefaultNativeWindowSettings());
 
             var scene = new Scene();
-            var gameObject = new GameObject();
+            var gameObjectMesh = new GameObject();
             var meshRenderer = new MeshRenderer();
 
             var meshOld = new Mesh {
@@ -56,10 +56,16 @@ namespace HeavyWindow {
             meshRenderer.SetMesh(mesh);
             meshRenderer.CreateShader("Shaders/VertexShader.vert", "Shaders/FragmentShader.frag");
             meshRenderer.CreateTexture("Resources/container.png");
-            meshRenderer.CreateTexture("Resources/awesomeface.png");
 
-            gameObject.AddComponent(meshRenderer);
-            scene.AddGameObject(gameObject);
+            var gameObjectCamera = new GameObject();
+            var camera = new Camera(new Vector2(640, 480));
+            gameObjectCamera.AddComponent(camera);
+            camera.Transform.Position = new Vector3(0.0f, 0.0f, -3.0f);
+
+            gameObjectMesh.AddComponent(meshRenderer);
+            gameObjectMesh.Transform.Rotation = Quaternion.FromEulerAngles(15.0f, 20.0f, 25.0f);
+            scene.AddGameObject(gameObjectMesh);
+
 
             game.LoadScene(scene);
 

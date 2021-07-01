@@ -34,7 +34,7 @@ namespace HeavyWindow {
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             base.OnRenderFrame(args);
 
-            renderer.Render();
+            //renderer.Render();
 
             SwapBuffers();
         }

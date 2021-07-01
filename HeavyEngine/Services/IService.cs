@@ -1,4 +1,7 @@
 ﻿namespace HeavyEngine {
+    /// <summary>
+    /// A <see cref="IService"/> can be injected into objects to provide with access to global state in a safe manner
+    /// </summary>
     public interface IService {
         /// <summary>
         /// Initializes the service.

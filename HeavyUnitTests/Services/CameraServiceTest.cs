@@ -62,7 +62,7 @@ namespace HeavyUnitTests.Services {
 
             service.RegisterCamera(cam);
             service.SetCameraMain(cam);
-            service.DeregisterCamera(cam);
+            service.UnregisterCamera(cam);
 
             Assert.Null(service.MainCamera);
         }

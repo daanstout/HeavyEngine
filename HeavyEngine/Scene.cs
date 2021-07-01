@@ -22,9 +22,9 @@ namespace HeavyEngine {
                 gameObject.UpdateGameObject();
         }
 
-        public void Render() {
+        public void Render(Camera camera) {
             foreach (var gameObject in gameObjects)
-                gameObject.RenderGameObject();
+                gameObject.RenderGameObject(camera);
         }
     }
 }

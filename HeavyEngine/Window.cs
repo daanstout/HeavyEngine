@@ -14,6 +14,7 @@ namespace HeavyEngine {
         [Dependency] private protected readonly IEventService eventService;
         [Dependency] private protected readonly ITimeService timeService;
         [Dependency] private protected readonly IInputService inputService;
+        [Dependency] private protected ICameraService cameraService;
         [Dependency] private protected readonly ICoroutineService coroutineService;
         [Dependency] private protected readonly ILogger logger;
 
@@ -51,7 +52,7 @@ namespace HeavyEngine {
         }
 
         protected override void OnRenderFrame(FrameEventArgs args) {
-            currentScene?.Render();
+            currentScene?.Render(cameraService.MainCamera);
 
             base.OnRenderFrame(args);
         }

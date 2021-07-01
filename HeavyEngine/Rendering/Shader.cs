@@ -71,6 +71,13 @@ namespace HeavyEngine {
 
         public void SetFloat(string name, float val) => GL.Uniform1(uniformCache[name], val);
 
+        public bool TrySetMat4(string name, Matrix4 mat) {
+            if (!uniformCache.ContainsKey(name))
+                return false;
+
+            GL.UniformMatrix4(uniformCache[name], true, ref mat);
+            return true;
+        }
         public void SetMat4(string name, Matrix4 mat) => GL.UniformMatrix4(uniformCache[name], true, ref mat);
 
         private string ReadShader(string path) {

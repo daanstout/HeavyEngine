@@ -80,9 +80,9 @@
 
         private static readonly int[] p;
 
-        private float Fade(float t) => t * t * t * ((t * (t * 6 - 15)) + 10);
-        private float Lerp(float a, float b, float x) => a + x * (b - a);
-        private float Gradient(int hash, float x, float y, float z) {
+        private static float Fade(float t) => t * t * t * ((t * (t * 6 - 15)) + 10);
+        private static float Lerp(float a, float b, float x) => a + x * (b - a);
+        private static float Gradient(int hash, float x, float y, float z) {
             var h = hash % 15;
             var u = h < 8 ? x : y;
 

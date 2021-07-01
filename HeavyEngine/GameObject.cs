@@ -35,6 +35,7 @@ namespace HeavyEngine {
             components.Add(component);
             component.GameObject = this;
             DependencyObtainer.PrimaryInjector.Inject(component);
+            component.OnAdded();
 
             if (component is IUpdatable updatable)
                 updatables.Add(updatable);
@@ -107,9 +108,9 @@ namespace HeavyEngine {
 
         }
 
-        public void RenderGameObject() {
+        public void RenderGameObject(Camera camera) {
             for (int i = 0; i < renderables.Count; i++)
-                renderables[i].Render();
+                renderables[i].Render(camera);
         }
 
         public override string ToString() => Name;

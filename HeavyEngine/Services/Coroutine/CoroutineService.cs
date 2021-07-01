@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 
 namespace HeavyEngine {
+    /// <summary>
+    /// The <see cref="CoroutineService"/> allows you to start coroutines that run over the span of multiple frames.
+    /// </summary>
     [Service(typeof(ICoroutineService), ServiceTypes.Singleton)]
     public sealed class CoroutineService : IService, ICoroutineService {
         [Dependency] private readonly IEventService eventService;
@@ -21,6 +24,7 @@ namespace HeavyEngine {
             eventService.Subscribe<UpdateEvent>(Update);
         }
 
+        /// <inheritdoc/>
         public void StartCoroutine(IEnumerator coroutine) {
             coroutine.MoveNext();
             coroutines.Add(coroutine);

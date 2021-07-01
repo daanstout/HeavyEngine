@@ -1,5 +1,5 @@
 ﻿namespace HeavyEngine.Rendering {
     public interface IRenderable {
-        void Render();
+        void Render(Camera camera);
     }
 }
