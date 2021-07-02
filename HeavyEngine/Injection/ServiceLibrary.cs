@@ -155,8 +155,13 @@ namespace HeavyEngine.Injection {
         }
 
         protected void RegisterServicesForType(Type type) {
-            var attrib = type.GetCustomAttribute<ServiceAttribute>();
+            var attribs = type.GetCustomAttributes<ServiceAttribute>();
 
+            foreach (var attrib in attribs)
+                RegisterServicesForType(type, attrib);
+        }
+
+        protected void RegisterServicesForType(Type type, ServiceAttribute attrib) {
             if (attrib == null)
                 throw new ArgumentException($"The given argument of type {type} does not have a Service Attribute applied to it");
 

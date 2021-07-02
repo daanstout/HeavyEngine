@@ -79,8 +79,8 @@ namespace HeavyEngine.Rendering {
             //shader.SetInt("texture0", 0);
             //shader.SetInt("texture1", 1);
             shader.TrySetMat4("transform", Transform.TransMatrix);
-            shader.TrySetMat4("view", camera.Transform.TransMatrix);
-            shader.TrySetMat4("projection", camera.Projection);
+            //shader.TrySetMat4("view", camera.Transform.TransMatrix);
+            //shader.TrySetMat4("projection", camera.Projection);
 
             GL.DrawElements(PrimitiveType.Triangles, Mesh.Indices.Length, DrawElementsType.UnsignedInt, new IntPtr(0));
         }

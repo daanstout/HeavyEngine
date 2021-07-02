@@ -6,7 +6,7 @@
 
             injector.Inject(instance);
 
-            ((IService)instance).Initialize();
+            (instance as IService)?.Initialize();
 
             return instance;
         }
