@@ -6,6 +6,7 @@ namespace HeavyEngine {
         void Invoke<TEvent>() where TEvent : IEvent;
         void Subscribe<TEvent, TData>(Action<TData> listener) where TEvent : IEvent;
         void Subscribe<TEvent>(Action listener) where TEvent : IEvent;
+        void Subscribe(Type type, Action listener);
         void Unsubscribe<TEvent, TData>(Action<TData> listener) where TEvent : IEvent;
         void Unsubscribe<TEvent>(Action listener) where TEvent : IEvent;
     }

@@ -7,8 +7,6 @@ using HeavyEngine;
 namespace ProceduralGeneration {
     [Service(typeof(NoiseMapService), ServiceTypes.Singleton)]
     public class NoiseMapService : IService {
-        [Dependency] private readonly IPerlinNoiseService perlinNoise;
-
         public void Initialize() { }
 
         public float[,] GenerateNoiseMap(int width, int height, float scale) {
@@ -19,10 +17,10 @@ namespace ProceduralGeneration {
 
             for (var y = 0; y < height; y++) {
                 for (var x = 0; x < width; x++) {
-                    float sampleX = x / scale;
-                    float sampleY = y / scale;
+                    var sampleX = x / scale;
+                    var sampleY = y / scale;
 
-                    var perlinValue = perlinNoise.Perlin(sampleX, sampleY);
+                    var perlinValue = PerlinNoise.Perlin(sampleX, sampleY);
 
                     noiseMap[x, y] = perlinValue;
                 }

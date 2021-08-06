@@ -58,13 +58,25 @@ namespace HeavyWindow {
             meshRenderer.CreateTexture("Resources/container.png");
 
             var gameObjectCamera = new GameObject();
-            var camera = new Camera(new Vector2(640, 480));
-            gameObjectCamera.AddComponent(camera);
-            camera.Transform.Position = new Vector3(0.0f, 0.0f, -3.0f);
+            var camera = gameObjectCamera.AddComponent(new Camera(new Vector2(640, 480)));
+            gameObjectCamera.AddComponent(new CameraMover());
+            camera.Transform.Position = new Vector3(0.0f, 0.0f, 3.0f);
 
             gameObjectMesh.AddComponent(meshRenderer);
             gameObjectMesh.Transform.Rotation = Quaternion.FromEulerAngles(15.0f, 20.0f, 25.0f);
+
+            var gameObjectMesh2 = new GameObject();
+            var meshRenderer2 = gameObjectMesh2.AddComponent(new MeshRenderer());
+            meshRenderer2.SetMesh(mesh);
+            meshRenderer2.CreateShader("Shaders/VertexShader.vert", "Shaders/FragmentShader.frag");
+            meshRenderer2.CreateTexture("Resources/container.png");
+
+            gameObjectMesh2.Transform.Position = new Vector3(2.0f, 2.0f, 2.0f);
+
+
             scene.AddGameObject(gameObjectMesh);
+            scene.AddGameObject(gameObjectMesh2);
+            scene.AddGameObject(gameObjectCamera);
 
 
             game.LoadScene(scene);
@@ -78,6 +90,35 @@ namespace HeavyWindow {
             //game.GetRendererTransform().Position = new Vector3(0.1f, 0.1f, 0.0f);
 
             game.Run();
+        }
+    }
+
+    class CameraMover : Component, IUpdatable {
+        [Dependency] private readonly IInputService inputService;
+
+        public float speed = 1.5f;
+        public float rotationSpeed = 0.5f;
+
+        public void Update() {
+            if (inputService.CurrentKeyboardState.IsKeyDown(OpenTK.Windowing.GraphicsLibraryFramework.Keys.W))
+                Transform.Position += Transform.Forward * speed * Time.DeltaTime;
+            if (inputService.CurrentKeyboardState.IsKeyDown(OpenTK.Windowing.GraphicsLibraryFramework.Keys.S))
+                Transform.Position -= Transform.Forward * speed * Time.DeltaTime;
+
+            if (inputService.CurrentKeyboardState.IsKeyDown(OpenTK.Windowing.GraphicsLibraryFramework.Keys.A))
+                Transform.Position -= Transform.Right * speed * Time.DeltaTime;
+            if (inputService.CurrentKeyboardState.IsKeyDown(OpenTK.Windowing.GraphicsLibraryFramework.Keys.D))
+                Transform.Position += Transform.Right * speed * Time.DeltaTime;
+
+            if (inputService.CurrentKeyboardState.IsKeyDown(OpenTK.Windowing.GraphicsLibraryFramework.Keys.Space))
+                Transform.Position += Transform.Up * speed * Time.DeltaTime;
+            if (inputService.CurrentKeyboardState.IsKeyDown(OpenTK.Windowing.GraphicsLibraryFramework.Keys.LeftShift))
+                Transform.Position -= Transform.Up * speed * Time.DeltaTime;
+
+            if (inputService.CurrentKeyboardState.IsKeyDown(OpenTK.Windowing.GraphicsLibraryFramework.Keys.Q))
+                Transform.Rotation = Quaternion.FromEulerAngles(0.0f, rotationSpeed * Time.DeltaTime, 0.0f) * Transform.Rotation;
+            if (inputService.CurrentKeyboardState.IsKeyDown(OpenTK.Windowing.GraphicsLibraryFramework.Keys.E))
+                Transform.Rotation = Quaternion.FromEulerAngles(0.0f, -rotationSpeed * Time.DeltaTime, 0.0f) * Transform.Rotation;
         }
     }
 }

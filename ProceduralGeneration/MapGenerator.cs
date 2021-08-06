@@ -6,7 +6,6 @@ namespace ProceduralGeneration {
     public class MapGenerator : Component, IAwakable, IUpdatable {
         [Dependency] private readonly NoiseMapService mapService;
         [Dependency] private readonly IInputService inputService;
-        [Dependency] private readonly ITimeService timeService;
 
         public int mapWidth;
         public int mapHeight;
@@ -14,12 +13,10 @@ namespace ProceduralGeneration {
 
         public MapDisplay mapDisplay;
 
-        public void Awake() {
-            GenerateMap();
-        }
+        public void Awake() => GenerateMap();
 
         public void Update() {
-            bool change = false;
+            var change = false;
             if (inputService.CurrentKeyboardState.IsKeyPressed(Keys.Q)) {
                 mapWidth--;
                 change = true;
@@ -37,11 +34,11 @@ namespace ProceduralGeneration {
                 change = true;
             }
             if (inputService.CurrentKeyboardState.IsKeyDown(Keys.Z)) {
-                noiseScale -= 2 * timeService.DeltaTime;
+                noiseScale -= 2 * Time.DeltaTime;
                 change = true;
             }
             if (inputService.CurrentKeyboardState.IsKeyDown(Keys.X)) {
-                noiseScale += 2 * timeService.DeltaTime;
+                noiseScale += 2 * Time.DeltaTime;
                 change = true;
             }
 

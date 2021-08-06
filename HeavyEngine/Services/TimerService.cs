@@ -10,7 +10,6 @@ namespace HeavyEngine {
             public bool useScaledTime;
         }
 
-        [Dependency] private readonly ITimeService timeService;
         [Dependency] private readonly IEventService eventService;
 
         private readonly List<TimedObject> timedObjects = new List<TimedObject>();
@@ -28,7 +27,7 @@ namespace HeavyEngine {
         private void Update() {
             var objectsToRemove = new List<TimedObject>();
             foreach (var timedObject in timedObjects) {
-                timedObject.timeRemaining -= (timedObject.useScaledTime ? timeService.DeltaTime : timeService.UnscaledDeltaTime);
+                timedObject.timeRemaining -= (timedObject.useScaledTime ? Time.DeltaTime : Time.UnscaledDeltaTime);
 
                 if (timedObject.timeRemaining < 0.0f)
                     objectsToRemove.Add(timedObject);

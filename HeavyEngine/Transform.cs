@@ -6,11 +6,8 @@ using OpenTK.Mathematics;
 namespace HeavyEngine {
     public sealed class Transform {
         private Vector3 position;
-        private Vector3 localPosition;
         private Quaternion rotation;
-        private Quaternion localRotation;
         private Vector3 scale;
-        private Vector3 localScale;
         private Matrix4 transMatrix;
 
         private bool dirty = true;
@@ -23,13 +20,6 @@ namespace HeavyEngine {
             }
         }
 
-        public Vector3 LocalPosition {
-            get => localPosition;
-            set {
-                dirty = true;
-                localPosition = value;
-            }
-        }
 
         public Quaternion Rotation {
             get => rotation;
@@ -39,25 +29,18 @@ namespace HeavyEngine {
             }
         }
 
-        public Quaternion LocalRotation {
-            get => localRotation;
-            set {
-                dirty = true;
-                localRotation = value;
-            }
-        }
 
         public Vector3 Scale {
             get => scale;
-        }
-
-        public Vector3 LocalScale {
-            get => localScale;
             set {
                 dirty = true;
-                localScale = value;
+                scale = value;
             }
         }
+
+        public Vector3 Up => Vector3.Transform(Vector3.UnitY, rotation);
+        public Vector3 Forward => Vector3.Transform(-Vector3.UnitZ, rotation);
+        public Vector3 Right => Vector3.Transform(Vector3.UnitX, rotation);
 
         public Matrix4 View => Matrix4.CreateFromQuaternion(rotation) * Matrix4.CreateTranslation(position);
 

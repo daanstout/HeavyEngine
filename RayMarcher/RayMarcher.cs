@@ -24,7 +24,7 @@ namespace RayMarcher {
 
         private int VBO;
         private int VAO;
-        private Shader shader;
+        private ShaderOld shader;
 
         private WorldObject WO;
         private Camera camera;
@@ -46,7 +46,7 @@ namespace RayMarcher {
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
             GL.EnableVertexAttribArray(0);
 
-            shader = new Shader("Shaders/VertexShader.vert", "Shaders/DopeShader.frag");
+            shader = new ShaderOld("Shaders/VertexShader.vert", "Shaders/DopeShader.frag");
             shader.Bind();
 
             WO = new WorldObject {

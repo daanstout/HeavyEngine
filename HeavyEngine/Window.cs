@@ -12,7 +12,6 @@ using OpenTK.Windowing.Desktop;
 namespace HeavyEngine {
     public class Window : GameWindow {
         [Dependency] private protected readonly IEventService eventService;
-        [Dependency] private protected readonly ITimeService timeService;
         [Dependency] private protected readonly IInputService inputService;
         [Dependency] private protected ICameraService cameraService;
         [Dependency] private protected readonly ICoroutineService coroutineService;
@@ -37,12 +36,13 @@ namespace HeavyEngine {
             services.SetupSelf();
 
             DependencyObtainer.PrimaryInjector.Inject(this);
-
-            //coroutineService.StartCoroutine(Coroutine());
         }
 
         protected override void OnUpdateFrame(FrameEventArgs args) {
-            timeService.Update(args);
+            if (!IsFocused)
+                return;
+
+            Time.Update(args);
             eventService.Invoke<UpdateEvent>();
             inputService.Update(KeyboardState);
 
@@ -52,6 +52,9 @@ namespace HeavyEngine {
         }
 
         protected override void OnRenderFrame(FrameEventArgs args) {
+            if (!IsFocused)
+                return;
+
             currentScene?.Render(cameraService.MainCamera);
 
             base.OnRenderFrame(args);
@@ -76,13 +79,5 @@ namespace HeavyEngine {
 
             return settings;
         }
-
-        //private IEnumerator Coroutine() {
-        //    var rand = new Random();
-        //    yield return null;
-        //    yield return null;
-        //    yield return null;
-        //    logger.Log("Now");
-        //}
     }
 }

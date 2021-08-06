@@ -4,22 +4,45 @@ using System.Text;
 
 namespace HeavyEngine {
     public sealed class Scene {
-        private readonly HashSet<GameObject> gameObjects;
+        private readonly List<GameObject> addedGameObjects;
+        private readonly List<GameObject> gameObjects;
+        private readonly List<GameObject> removedGameObjects;
 
         public Scene() {
-            gameObjects = new HashSet<GameObject>();
+            addedGameObjects = new List<GameObject>();
+            gameObjects = new List<GameObject>();
+            removedGameObjects = new List<GameObject>();
         }
 
-        public bool AddGameObject(GameObject gameObject) => gameObjects.Add(gameObject);
+        public void AddGameObject(GameObject gameObject) => addedGameObjects.Add(gameObject);
+        public void RemoveGameObject(GameObject gameObject) => removedGameObjects.Add(gameObject);
 
         public void Awake() {
-            foreach (var gameObject in gameObjects)
-                gameObject.AwakeGameObject();
+            gameObjects.AddRange(addedGameObjects);
+            addedGameObjects.Clear();
+
+            for (int i = 0; i < gameObjects.Count; i++)
+                gameObjects[i].AwakeGameObject();
+
+            for (int i = 0; i < removedGameObjects.Count; i++)
+                gameObjects.Remove(removedGameObjects[i]);
+
+            removedGameObjects.Clear();
         }
 
         public void Update() {
-            foreach (var gameObject in gameObjects)
-                gameObject.UpdateGameObject();
+            var newObjects = addedGameObjects.ToArray();
+            addedGameObjects.Clear();
+
+            for (int i = 0; i < newObjects.Length; i++)
+                newObjects[i].AwakeGameObject();
+
+            gameObjects.AddRange(newObjects);
+
+            for (int i = 0; i < gameObjects.Count; i++)
+                gameObjects[i].UpdateGameObject();
+
+            
         }
 
         public void Render(Camera camera) {

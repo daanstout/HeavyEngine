@@ -26,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DependencyInjection\HeavyInjection.csproj" />
     <ProjectReference Include="..\HeavyEngine\HeavyEngine.csproj" />
   </ItemGroup>
 

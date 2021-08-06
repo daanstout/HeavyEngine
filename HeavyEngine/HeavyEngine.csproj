@@ -28,4 +28,8 @@
     <Folder Include="Rendering\Pipeline\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\DependencyInjection\HeavyInjection.csproj" />
+  </ItemGroup>
+
 </Project>

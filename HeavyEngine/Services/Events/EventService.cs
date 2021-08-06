@@ -31,6 +31,16 @@ namespace HeavyEngine {
             ((EventNode)events[typeof(TEvent)]).evt += listener;
         }
 
+        public void Subscribe(Type type, Action listener) {
+            if (!typeof(IEvent).IsAssignableFrom(type))
+                throw new ArgumentException($"Type {type.Name} does not inherit from {nameof(IEvent)}.");
+
+            if (!events.ContainsKey(type))
+                events.Add(type, new EventNode());
+
+            ((EventNode)events[type]).evt += listener;
+        }
+
         public void Subscribe<TEvent, TData>(Action<TData> listener) where TEvent : IEvent {
             if (!events.ContainsKey(typeof(TEvent)))
                 events.Add(typeof(TEvent), new EventNode<TData>());

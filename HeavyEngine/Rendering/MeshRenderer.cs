@@ -6,7 +6,7 @@ using OpenTK.Mathematics;
 namespace HeavyEngine.Rendering {
     public class MeshRenderer : Component, IDisposable, IRenderer, IRenderable {
         private Mesh Mesh;
-        private Shader shader;
+        private ShaderOld shader;
         private readonly VertexArrayObject VAO;
         private readonly VertexBufferObject VBO;
         private readonly ElementBufferObject EBO;
@@ -63,7 +63,11 @@ namespace HeavyEngine.Rendering {
         public void CreateShader(string vertexPath = IRenderer.DEFAULT_VERTEX_SHADER_PATH, string fragmentPath = IRenderer.DEFAULT_FRAGMENT_SHADER_PATH) {
             shader?.Unbind();
             shader?.Dispose();
-            shader = new Shader(vertexPath, fragmentPath);
+            //shader = new Shader(vertexPath, fragmentPath);
+            shader = new ShaderOld();
+            shader.LoadShaderFromPath(vertexPath, ShaderType.VertexShader);
+            shader.LoadShaderFromPath(fragmentPath, ShaderType.FragmentShader);
+            shader.FinishShaderCreation();
         }
 
         public void Render(Camera camera) {
@@ -79,8 +83,8 @@ namespace HeavyEngine.Rendering {
             //shader.SetInt("texture0", 0);
             //shader.SetInt("texture1", 1);
             shader.TrySetMat4("transform", Transform.TransMatrix);
-            //shader.TrySetMat4("view", camera.Transform.TransMatrix);
-            //shader.TrySetMat4("projection", camera.Projection);
+            shader.TrySetMat4("view", camera.View);
+            shader.TrySetMat4("projection", camera.Projection);
 
             GL.DrawElements(PrimitiveType.Triangles, Mesh.Indices.Length, DrawElementsType.UnsignedInt, new IntPtr(0));
         }

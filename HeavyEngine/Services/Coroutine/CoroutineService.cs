@@ -8,7 +8,6 @@ namespace HeavyEngine {
     [Service(typeof(ICoroutineService), ServiceTypes.Singleton)]
     public sealed class CoroutineService : IService, ICoroutineService {
         [Dependency] private readonly IEventService eventService;
-        [Dependency] private readonly ITimeService timeService;
 
         private readonly List<IEnumerator> coroutines;
 
@@ -35,7 +34,7 @@ namespace HeavyEngine {
 
             foreach (var coroutine in coroutines) {
                 if (coroutine.Current is WaitDuration wd)
-                    wd.Duration -= timeService.DeltaTime;
+                    wd.Duration -= Time.DeltaTime;
 
                 if (coroutine.Current is IEnumerator ie)
                     if (!ie.MoveNext())

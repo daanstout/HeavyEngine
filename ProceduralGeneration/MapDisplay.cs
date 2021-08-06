@@ -23,7 +23,7 @@ namespace ProceduralGeneration {
             }
 
             renderer.Texture.Apply();
-            renderer.Transform.LocalScale = new Vector3(width, 1, height);
+            renderer.Transform.Scale = new Vector3(width, 1, height);
         }
 
         private Color LerpColor(Color a, Color b, float x) => Color.FromArgb(255, Lerp(a.R, b.R, x), Lerp(a.G, b.G, x), Lerp(a.B, b.B, x));

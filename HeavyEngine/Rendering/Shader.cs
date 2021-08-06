@@ -4,94 +4,36 @@ using System.IO;
 using System.Text;
 
 using OpenTK.Graphics.OpenGL4;
-using OpenTK.Mathematics;
 
 namespace HeavyEngine {
-    public class Shader : IDisposable {
-        private readonly Dictionary<string, int> uniformCache;
+    public class Shader : IDisposable, IEquatable<Shader> {
         private readonly int handle;
         private bool isDisposed = false;
-        private bool isBound = false;
 
-        public Shader(string vertexPath, string fragmentPath) {
-            uniformCache = new Dictionary<string, int>();
+        public int Handle => handle;
+        public ShaderType ShaderType { get; }
 
-            var vertexShader = CreateShader(vertexPath, ShaderType.VertexShader);
-            var fragmentShader = CreateShader(fragmentPath, ShaderType.FragmentShader);
-
-            handle = GL.CreateProgram();
-            GL.AttachShader(handle, vertexShader);
-            GL.AttachShader(handle, fragmentShader);
-
-            GL.LinkProgram(handle);
-
-            GL.DetachShader(handle, vertexShader);
-            GL.DetachShader(handle, fragmentShader);
-            GL.DeleteShader(fragmentShader);
-            GL.DeleteShader(vertexShader);
-
-            FillUniformCache();
+        private Shader(ShaderType shaderType) {
+            handle = GL.CreateShader(shaderType);
+            ShaderType = shaderType;
         }
 
         ~Shader() {
-            Dispose(false);
+            Dispose();
         }
 
-        public void Bind() {
-            GL.UseProgram(handle);
-            isBound = true;
-        }
-
-        public void Unbind() {
-            GL.UseProgram(0);
-            isBound = false;
-        }
-
-        protected virtual void Dispose(bool disposing) {
-            if (isDisposed)
-                return;
-
-            GL.DeleteProgram(handle);
-
-            isDisposed = true;
-        }
-
-        public void Dispose() {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        public void SetVec2(string name, Vector2 vec) => GL.Uniform2(uniformCache[name], vec);
-
-        public void SetVec3(string name, Vector3 vec) => GL.Uniform3(uniformCache[name], vec);
-
-        public void SetInt(string name, int val) => GL.Uniform1(uniformCache[name], val);
-
-        public void SetColor(string name, Color4 color) => GL.Uniform4(uniformCache[name], color);
-
-        public void SetFloat(string name, float val) => GL.Uniform1(uniformCache[name], val);
-
-        public bool TrySetMat4(string name, Matrix4 mat) {
-            if (!uniformCache.ContainsKey(name))
-                return false;
-
-            GL.UniformMatrix4(uniformCache[name], true, ref mat);
-            return true;
-        }
-        public void SetMat4(string name, Matrix4 mat) => GL.UniformMatrix4(uniformCache[name], true, ref mat);
-
-        private string ReadShader(string path) {
+        public static Shader CreateFromFile(string path, ShaderType shaderType) {
             using var reader = new StreamReader(path, Encoding.UTF8);
-            return reader.ReadToEnd();
+            return CreateFromSource(reader.ReadToEnd(), shaderType);
         }
 
-        private int CreateShader(string path, ShaderType shaderType) {
-            var source = ReadShader(path);
-            var shader = GL.CreateShader(shaderType);
-            GL.ShaderSource(shader, source);
+        public static Shader CreateFromSource(string source, ShaderType shaderType) {
+            var shader = new Shader(shaderType);
+            GL.ShaderSource(shader.handle, source);
+            GL.CompileShader(shader.handle);
 
-            GL.CompileShader(shader);
-            var infoLog = GL.GetShaderInfoLog(shader);
+            var infoLog = GL.GetShaderInfoLog(shader.handle);
+
             if (!string.IsNullOrEmpty(infoLog)) {
                 var color = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.Red;
@@ -102,19 +44,21 @@ namespace HeavyEngine {
             return shader;
         }
 
-        private void FillUniformCache() {
-            bool unbind = !isBound;
-            if (!isBound)
-                Bind();
+        public void Dispose() {
+            if (isDisposed)
+                return;
 
-            GL.GetProgram(handle, GetProgramParameterName.ActiveUniforms, out int uniformCount);
-            for (int i = 0; i < uniformCount; i++) {
-                GL.GetActiveUniform(handle, i, 100, out int _, out int _, out ActiveUniformType _, out string name);
-                uniformCache.Add(name, i);
-            }
+            GL.DeleteShader(handle);
 
-            if (unbind)
-                Unbind();
+            isDisposed = true;
+            GC.SuppressFinalize(this);
         }
+
+        public override bool Equals(object obj) => Equals(obj as Shader);
+        public bool Equals(Shader other) => other != null && handle == other.handle;
+        public override int GetHashCode() => HashCode.Combine(handle);
+
+        public static bool operator ==(Shader left, Shader right) => EqualityComparer<Shader>.Default.Equals(left, right);
+        public static bool operator !=(Shader left, Shader right) => !(left == right);
     }
 }
