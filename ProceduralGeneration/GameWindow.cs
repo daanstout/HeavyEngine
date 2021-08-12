@@ -2,6 +2,7 @@
 
 using HeavyEngine;
 using HeavyEngine.Injection;
+using HeavyEngine.Logging;
 
 using OpenTK.Graphics.ES30;
 using OpenTK.Windowing.Common;
@@ -25,6 +26,7 @@ namespace ProceduralGeneration {
             base.SetupServices(services);
             
             services.FindServices(Assembly.GetExecutingAssembly());
+            services.BindTag<ILogger>(null, DependencyConstants.LOGGER_CONSOLE_LOGGER);
         }
 
         protected override void OnRenderFrame(FrameEventArgs args) {

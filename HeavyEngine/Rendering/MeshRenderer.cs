@@ -4,9 +4,9 @@ using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 
 namespace HeavyEngine.Rendering {
-    public class MeshRenderer : Component, IDisposable, IRenderer, IRenderable {
-        private Mesh Mesh;
-        private ShaderOld shader;
+    public class MeshRenderer : Component, IDisposable, IRenderable {
+        private Mesh mesh;
+        private readonly Material material;
         private readonly VertexArrayObject VAO;
         private readonly VertexBufferObject VBO;
         private readonly ElementBufferObject EBO;
@@ -18,8 +18,7 @@ namespace HeavyEngine.Rendering {
             VBO = new VertexBufferObject();
             VAO = new VertexArrayObject();
             EBO = new ElementBufferObject();
-
-            CreateShader();
+            material = new Material();
         }
 
         ~MeshRenderer() {
@@ -43,13 +42,13 @@ namespace HeavyEngine.Rendering {
         }
 
         public void SetTexture(Texture2D texture) {
-            this.Texture?.Dispose();
-            this.Texture = texture;
-            this.Texture.Apply();
+            Texture?.Dispose();
+            Texture = texture;
+            Texture.Apply();
         }
 
         public void SetMesh(Mesh mesh) {
-            Mesh = mesh;
+            this.mesh = mesh;
             VBO.SetData(mesh);
 
             VAO.Push(3);
@@ -60,33 +59,27 @@ namespace HeavyEngine.Rendering {
             EBO.SetData(mesh);
         }
 
-        public void CreateShader(string vertexPath = IRenderer.DEFAULT_VERTEX_SHADER_PATH, string fragmentPath = IRenderer.DEFAULT_FRAGMENT_SHADER_PATH) {
-            shader?.Unbind();
-            shader?.Dispose();
-            //shader = new Shader(vertexPath, fragmentPath);
-            shader = new ShaderOld();
-            shader.LoadShaderFromPath(vertexPath, ShaderType.VertexShader);
-            shader.LoadShaderFromPath(fragmentPath, ShaderType.FragmentShader);
-            shader.FinishShaderCreation();
-        }
+        public void AddShaderFile(string path, ShaderType shaderType) => material.AddShader(Shader.CreateFromFile(path, shaderType));
+
+        public void AddShaderSource(string source, ShaderType shaderType) => material.AddShader(Shader.CreateFromSource(source, shaderType));
+
+        public void FinalizeMaterial() => material.FinalizeMaterial();
 
         public void Render(Camera camera) {
-            if (Mesh == null)
+            if (mesh == null)
                 return;
 
-            if (Mesh.Vertices.Length == 0)
+            if (mesh.Vertices.Length == 0)
                 return;
 
             VAO.Bind();
             Texture?.Bind();
-            shader.Bind();
-            //shader.SetInt("texture0", 0);
-            //shader.SetInt("texture1", 1);
-            shader.TrySetMat4("transform", Transform.TransMatrix);
-            shader.TrySetMat4("view", camera.View);
-            shader.TrySetMat4("projection", camera.Projection);
+            material.Bind();
+            material.TrySetMat4("transform", Transform.TransMatrix);
+            material.TrySetMat4("view", camera.View);
+            material.TrySetMat4("projection", camera.Projection);
 
-            GL.DrawElements(PrimitiveType.Triangles, Mesh.Indices.Length, DrawElementsType.UnsignedInt, new IntPtr(0));
+            GL.DrawElements(PrimitiveType.Triangles, mesh.Indices.Length, DrawElementsType.UnsignedInt, new IntPtr(0));
         }
 
         public void Dispose() {
@@ -98,7 +91,7 @@ namespace HeavyEngine.Rendering {
             if (disposed)
                 return;
 
-            shader.Dispose();
+            material.Dispose();
             VAO.Dispose();
             VBO.Dispose();
             EBO.Dispose();

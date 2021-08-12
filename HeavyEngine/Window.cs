@@ -45,7 +45,6 @@ namespace HeavyEngine {
             Time.Update(args);
             eventService.Invoke<UpdateEvent>();
             inputService.Update(KeyboardState);
-
             currentScene?.Update();
 
             base.OnUpdateFrame(args);
@@ -62,8 +61,8 @@ namespace HeavyEngine {
 
         public static GameWindowSettings CreateDefaultGameWindowSettings() {
             return new GameWindowSettings {
-                UpdateFrequency = 144.0f,
-                RenderFrequency = 144.0f,
+                UpdateFrequency = 0.0f,
+                RenderFrequency = 0.0f,
                 IsMultiThreaded = false
             };
         }

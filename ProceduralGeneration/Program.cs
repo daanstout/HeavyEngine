@@ -1,7 +1,4 @@
-﻿using System;
-
-using HeavyEngine;
-using HeavyEngine.Rendering;
+﻿using HeavyEngine;
 
 namespace ProceduralGeneration {
     class Program {

@@ -54,8 +54,10 @@ namespace HeavyWindow {
             var unflattened = Mesh.Unflatten(meshOld);
 
             meshRenderer.SetMesh(mesh);
-            meshRenderer.CreateShader("Shaders/VertexShader.vert", "Shaders/FragmentShader.frag");
+            meshRenderer.AddShaderFile("Shaders/VertexShader.vert", OpenTK.Graphics.OpenGL4.ShaderType.VertexShader);
+            meshRenderer.AddShaderFile("Shaders/FragmentShader.frag", OpenTK.Graphics.OpenGL4.ShaderType.FragmentShader);
             meshRenderer.CreateTexture("Resources/container.png");
+            meshRenderer.FinalizeMaterial();
 
             var gameObjectCamera = new GameObject();
             var camera = gameObjectCamera.AddComponent(new Camera(new Vector2(640, 480)));
@@ -68,8 +70,10 @@ namespace HeavyWindow {
             var gameObjectMesh2 = new GameObject();
             var meshRenderer2 = gameObjectMesh2.AddComponent(new MeshRenderer());
             meshRenderer2.SetMesh(mesh);
-            meshRenderer2.CreateShader("Shaders/VertexShader.vert", "Shaders/FragmentShader.frag");
+            meshRenderer2.AddShaderFile("Shaders/VertexShader.vert", OpenTK.Graphics.OpenGL4.ShaderType.VertexShader);
+            meshRenderer2.AddShaderFile("Shaders/FragmentShader.frag", OpenTK.Graphics.OpenGL4.ShaderType.FragmentShader);
             meshRenderer2.CreateTexture("Resources/container.png");
+            meshRenderer2.FinalizeMaterial();
 
             gameObjectMesh2.Transform.Position = new Vector3(2.0f, 2.0f, 2.0f);
 

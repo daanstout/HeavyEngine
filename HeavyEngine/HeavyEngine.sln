@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31005.135
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HeavyEngine", "HeavyEngine.csproj", "{500FBED9-BAEE-484B-9618-F15CA50EBD09}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestWindow", "..\HeavyWindow\TestWindow.csproj", "{95F0A69A-51D1-4E22-BE9A-6ABC42E6B2C5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestWindow", "..\TestWindow\TestWindow.csproj", "{95F0A69A-51D1-4E22-BE9A-6ABC42E6B2C5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RayMarcher", "..\RayMarcher\RayMarcher.csproj", "{AE0258D2-1CC8-41AA-A3E6-EEE22FF82743}"
 EndProject
@@ -18,7 +18,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HeavyUnitTests", "..\HeavyU
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProceduralGeneration", "..\ProceduralGeneration\ProceduralGeneration.csproj", "{AD54D51F-A785-4B72-954D-F3D8EC698918}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeavyInjection", "..\DependencyInjection\HeavyInjection.csproj", "{CD218BB7-4680-462B-B3BA-66DB69B88F76}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeavyInjection", "..\HeavyInjection\HeavyInjection.csproj", "{CD218BB7-4680-462B-B3BA-66DB69B88F76}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

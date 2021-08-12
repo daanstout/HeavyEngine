@@ -48,7 +48,5 @@ namespace HeavyWindow {
         public void AddTexture2(string path) => renderer.CreateTexture(path);
 
         public Transform GetRendererTransform() => renderer.Transform;
-
-        public void CreateShaders(string vertexShader, string fragmentShader) => renderer.CreateShader(vertexShader, fragmentShader);
     }
 }

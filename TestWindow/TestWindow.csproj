@@ -1,20 +1,27 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <StartupObject>RayMarcher.Program</StartupObject>
     <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;0649</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
-    <None Remove="Shaders\DopeShader.frag" />
+    <None Remove="Resources\awesomeface.png" />
+    <None Remove="Resources\container.png" />
     <None Remove="Shaders\FragmentShader.frag" />
     <None Remove="Shaders\VertexShader.vert" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Shaders\DopeShader.frag">
+    <Content Include="Resources\awesomeface.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\container.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Shaders\FragmentShader.frag">
