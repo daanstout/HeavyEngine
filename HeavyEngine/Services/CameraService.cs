@@ -49,6 +49,8 @@ namespace HeavyEngine {
                 return;
             }
 
+            cameras.Remove(camera);
+
             if (mainCamera == camera)
                 mainCamera = cameras.FirstOrDefault(); // Will probably make the first camera in the list the main camera
 

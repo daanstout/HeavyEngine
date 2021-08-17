@@ -92,6 +92,15 @@ namespace HeavyEngine.Injection {
             Add(identifier, new SingletonContainer<TImplementation>());
         }
 
+        public void AddInstance<TAbstract, TImplementation>(TImplementation implementation, string tag = null) where TImplementation : class, new() {
+            var identifier = new ServiceIdentifier {
+                Type = typeof(TAbstract),
+                Tag = tag
+            };
+
+            Add(identifier, new InstanceContainer<TImplementation>(implementation));
+        }
+
         public bool BindTag<TAbstract>(string tag, string target) {
             var binding = new Binding {
                 BaseType = typeof(TAbstract),
@@ -118,10 +127,6 @@ namespace HeavyEngine.Injection {
         public void FindServices(IEnumerable<Assembly> assemblies) {
             foreach (var assembly in assemblies)
                 FindServices(assembly);
-        }
-
-        public void SetupSelf() {
-
         }
 
         public void OverrideSingleton<TAbstract, TImplementation>(string tag = null) where TImplementation : class, new() {

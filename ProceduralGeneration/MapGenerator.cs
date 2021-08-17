@@ -1,13 +1,28 @@
-﻿using HeavyEngine;
+﻿using System;
+using System.Drawing;
+
+using HeavyEngine;
 
 using OpenTK.Mathematics;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace ProceduralGeneration {
     public class MapGenerator : Component, IAwakable, IUpdatable {
+        public enum DrawMode {
+            NoiseMap,
+            ColorMap
+        }
+
+        public struct TerrainType {
+            public string name;
+            public float height;
+            public Color color;
+        }
+
         [Dependency] private readonly NoiseMapService mapService;
         [Dependency] private readonly IInputService inputService;
 
+        public DrawMode drawMode;
         public int mapWidth;
         public int mapHeight;
         public float noiseScale;
@@ -16,6 +31,8 @@ namespace ProceduralGeneration {
         public float lacunarity;
         public int seed;
         public Vector2 offset;
+
+        public TerrainType[] regions = Array.Empty<TerrainType>();
 
         public MapDisplay mapDisplay;
 
@@ -67,6 +84,15 @@ namespace ProceduralGeneration {
                 change = true;
             }
 
+            if (inputService.CurrentKeyboardState.IsKeyPressed(Keys.LeftControl) || inputService.CurrentKeyboardState.IsKeyPressed(Keys.RightControl)) {
+                drawMode = drawMode switch {
+                    DrawMode.ColorMap => DrawMode.NoiseMap,
+                    DrawMode.NoiseMap => DrawMode.ColorMap,
+                    _ => DrawMode.NoiseMap
+                };
+                change = true;
+            }
+
             if (noiseScale < 0)
                 noiseScale = 1e-6f;
 
@@ -77,7 +103,25 @@ namespace ProceduralGeneration {
         private void GenerateMap() {
             var noiseMap = mapService.GenerateNoiseMap(mapWidth, mapHeight, noiseScale, seed, octaves, persistance, lacunarity, offset);
 
-            mapDisplay.DrawNoiseMap(noiseMap);
+            Color[] colorMap = new Color[mapWidth * mapHeight];
+
+            for (int y = 0; y < mapHeight; y++) {
+                for (int x = 0; x < mapWidth; x++) {
+                    var currentHeight = noiseMap[x, y];
+
+                    for (int i = 0; i < regions.Length; i++) {
+                        if (currentHeight <= regions[i].height) {
+                            colorMap[y * mapWidth + x] = regions[i].color;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (drawMode == DrawMode.NoiseMap)
+                mapDisplay.DrawBitmap(TextureGenerator.BitmapFromHeightMap(noiseMap));
+            else if (drawMode == DrawMode.ColorMap)
+                mapDisplay.DrawBitmap(TextureGenerator.BitmapFromColorMap(colorMap, mapWidth, mapHeight));
         }
     }
 }

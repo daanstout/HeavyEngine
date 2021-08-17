@@ -1,35 +1,19 @@
-﻿using System;
-using System.Diagnostics;
-using System.Drawing;
+﻿using System.Drawing;
 
 using HeavyEngine;
 using HeavyEngine.Rendering;
 
-using OpenTK.Mathematics;
-
 namespace ProceduralGeneration {
-    public class MapDisplay : Component {
+    public class MapDisplay : Component , IAwakable {
         public MeshRenderer renderer;
 
-        public void DrawNoiseMap(float[,] noiseMap) {
-            var width = noiseMap.GetLength(0);
-            var height = noiseMap.GetLength(1);
+        public void Awake() => renderer.Texture.FilterMode = FilterMode.Nearest;
 
-            if (!renderer.Texture.IsSize(width, height))
-                renderer.Texture.SetSize(width, height);
-
-            for (var y = 0; y < height; y++) {
-                for (var x = 0; x < width; x++) {
-                    renderer.Texture.SetPixel(x, y, LerpColor(Color.Black, Color.White, noiseMap[x, y]));
-                }
-            }
-
+        public void DrawBitmap(RawImage bitmap) {
+            //renderer.Texture.UseBitmap(bitmap);
+            renderer.Texture.UseImage(bitmap);
             renderer.Texture.Apply();
             //renderer.Transform.Scale = new Vector3(width, 1, height);
         }
-
-        private Color LerpColor(Color a, Color b, float x) => Color.FromArgb(255, Lerp(a.R, b.R, x), Lerp(a.G, b.G, x), Lerp(a.B, b.B, x));
-
-        private int Lerp(int a, int b, float x) => (int)(a + (x * (b - a)));
     }
 }

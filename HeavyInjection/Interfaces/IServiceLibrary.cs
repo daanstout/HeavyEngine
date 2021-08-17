@@ -33,6 +33,14 @@ namespace HeavyEngine.Injection {
         /// <param name="tag">A tag that can be used to differentiate between different versions of the same abstract type. Defaults to <see langword="null"/></param>
         void AddTransient<TAbstract, TImplementation>(string tag = null) where TImplementation : class, new();
         /// <summary>
+        /// Adds an instance of a service to be obtainable by the service library. This service is considered equal to a singleton service for all intents and purposes
+        /// </summary>
+        /// <typeparam name="TAbstract">The abstract type, which is the type requested by dependees of the service.</typeparam>
+        /// <typeparam name="TImplementation">The implementation type of the abstract type.</typeparam>
+        /// <param name="implementation">The isntance to return when the service is requested.</param>
+        /// <param name="tag">A tag that can be used to differentiate between different versions of the same abstract type. Defautls to <see langword="null"/></param>
+        void AddInstance<TAbstract, TImplementation>(TImplementation implementation, string tag = null) where TImplementation : class, new();
+        /// <summary>
         /// Binds two tags together, meaning that if a service with the first tag is requested, but not present,
         /// the <see cref="IServiceLibrary"/> will look for the target tag instead
         /// </summary>
@@ -115,10 +123,5 @@ namespace HeavyEngine.Injection {
         /// <typeparam name="TImplementation">The implementation that should be provided</typeparam>
         /// <param name="tag">The tag to differentiate with other abstract versions</param>
         void OverrideTransient<TAbstract, TImplementation>(string tag = null) where TImplementation : class, new();
-        /// <summary>
-        /// Allows an <see cref="IServiceLibrary"/> to setup itself with services.
-        /// <para>Call this after all the required services have been added.</para>
-        /// </summary>
-        void SetupSelf();
     }
 }

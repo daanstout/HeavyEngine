@@ -33,8 +33,6 @@ namespace HeavyEngine {
             services.FindServices(Assembly.GetExecutingAssembly());
             services.BindTag<ILogger>(null, DependencyConstants.LOGGER_CONSOLE_LOGGER);
             
-            services.SetupSelf();
-
             DependencyObtainer.PrimaryInjector.Inject(this);
         }
 

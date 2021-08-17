@@ -19,7 +19,7 @@ namespace HeavyEngine {
         }
 
         ~Camera() {
-            cameraService.UnregisterCamera(this);
+            cameraService?.UnregisterCamera(this);
         }
     }
 }
