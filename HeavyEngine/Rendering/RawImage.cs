@@ -90,6 +90,16 @@ namespace HeavyEngine.Rendering {
             }
         }
 
+        public Color4 GetPixel(int x, int y) {
+            var index = GetIndex(x, y);
+            return new Color4 {
+                R = data[index + 0] / 255.0f,
+                G = data[index + 1] / 255.0f,
+                B = data[index + 2] / 255.0f,
+                A = data[index + 3] / 255.0f
+            };
+        }
+
         public void Dispose() {
             if (pointer.HasValue) {
                 pointer.Value.Free();

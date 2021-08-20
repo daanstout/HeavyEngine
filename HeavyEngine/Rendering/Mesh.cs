@@ -61,6 +61,12 @@ namespace HeavyEngine {
             },
         };
 
+        //public static Mesh Cube => new Mesh {
+        //    Vertices = new [] {
+        //        new Vertex {position = new Vector3(0.5f, 0.5f, 0.5f), normal}
+        //    }
+        //}
+
         /// <summary>
         /// Flattens a list of vertices into a mesh that uses indices, keeping the order the same
         /// </summary>

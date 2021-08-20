@@ -2,7 +2,6 @@
 using System.Drawing;
 
 using OpenTK.Graphics.OpenGL4;
-using OpenTK.Mathematics;
 
 namespace HeavyEngine.Rendering {
     public class Texture2D : IDisposable {
