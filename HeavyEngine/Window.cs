@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections;
-using System.Reflection;
+﻿using System.Reflection;
 
 using HeavyEngine.Injection;
 using HeavyEngine.Logging;
 
+using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
@@ -21,6 +20,8 @@ namespace HeavyEngine {
 
         public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings) : base(gameWindowSettings, nativeWindowSettings) {
             SetupServices(DependencyObtainer.PrimaryInjector.Services);
+
+            GL.Enable(EnableCap.DepthTest);
         }
 
         public virtual void LoadScene(Scene scene) {
@@ -51,6 +52,9 @@ namespace HeavyEngine {
         protected override void OnRenderFrame(FrameEventArgs args) {
             if (!IsFocused)
                 return;
+
+            GL.ClearDepth(1);
+            
 
             currentScene?.Render(cameraService.MainCamera);
 

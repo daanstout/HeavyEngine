@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-using HeavyEngine;
+﻿using HeavyEngine;
 
 using OpenTK.Mathematics;
 using OpenTK.Windowing.GraphicsLibraryFramework;
@@ -11,7 +7,7 @@ namespace ProceduralGeneration {
     class CameraMover : Component, IUpdatable {
         [Dependency] private readonly IInputService inputService;
 
-        public float speed = 1.5f;
+        public float speed = 10f;
         public float rotationSpeed = 0.5f;
 
         public void Update() {

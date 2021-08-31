@@ -75,9 +75,10 @@ namespace HeavyEngine.Rendering {
             VAO.Bind();
             Texture?.Bind();
             material.Bind();
-            material.TrySetMat4("transform", Transform.TransMatrix);
-            material.TrySetMat4("view", camera.View);
-            material.TrySetMat4("projection", camera.Projection);
+            material.SetMat4("transform", Transform.TransMatrix);
+            material.SetMat4("view", camera.View);
+            material.SetMat4("projection", camera.Projection);
+            material.SetData();
 
             GL.DrawElements(PrimitiveType.Triangles, mesh.Indices.Length, DrawElementsType.UnsignedInt, new IntPtr(0));
         }

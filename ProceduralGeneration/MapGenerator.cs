@@ -10,7 +10,8 @@ namespace ProceduralGeneration {
     public class MapGenerator : Component, IAwakable, IUpdatable {
         public enum DrawMode {
             NoiseMap,
-            ColorMap
+            ColorMap,
+            Mesh
         }
 
         public struct TerrainType {
@@ -87,7 +88,8 @@ namespace ProceduralGeneration {
             if (inputService.CurrentKeyboardState.IsKeyPressed(Keys.LeftControl) || inputService.CurrentKeyboardState.IsKeyPressed(Keys.RightControl)) {
                 drawMode = drawMode switch {
                     DrawMode.ColorMap => DrawMode.NoiseMap,
-                    DrawMode.NoiseMap => DrawMode.ColorMap,
+                    DrawMode.NoiseMap => DrawMode.Mesh,
+                    DrawMode.Mesh => DrawMode.ColorMap,
                     _ => DrawMode.NoiseMap
                 };
                 change = true;
@@ -122,6 +124,8 @@ namespace ProceduralGeneration {
                 mapDisplay.DrawBitmap(TextureGenerator.BitmapFromHeightMap(noiseMap));
             else if (drawMode == DrawMode.ColorMap)
                 mapDisplay.DrawBitmap(TextureGenerator.BitmapFromColorMap(colorMap, mapWidth, mapHeight));
+            else if (drawMode == DrawMode.Mesh)
+                mapDisplay.DrawMesh(MeshGenerator.GenerateTerrainMesh(noiseMap), TextureGenerator.BitmapFromColorMap(colorMap, mapWidth, mapHeight));
         }
     }
 }

@@ -1,6 +1,9 @@
 ﻿using HeavyEngine.Injection;
 
 namespace HeavyUnitTests {
+    /// <summary>
+    /// A base class for Test Classes that makes injection easier
+    /// </summary>
     public abstract class TestBase {
         private readonly IDependencyInjector injector = new TestInjector();
 
@@ -8,7 +11,6 @@ namespace HeavyUnitTests {
         /// Sets the object to return when the provided abstract class is requested with the given tag
         /// </summary>
         /// <typeparam name="TAbstract">The abstract type the object implements</typeparam>
-        /// <typeparam name="TImplementation">The implementation of the abstract class</typeparam>
         /// <param name="implementation">The implementation to provide</param>
         /// <param name="tag">The tag of the implementation</param>
         protected void Use<TAbstract>(object implementation, string tag = null) {

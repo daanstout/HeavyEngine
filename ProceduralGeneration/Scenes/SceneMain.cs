@@ -80,7 +80,7 @@ namespace ProceduralGeneration.Scenes {
             meshRenderer.AddShaderFile("Shaders/FragmentShader.frag", OpenTK.Graphics.OpenGL4.ShaderType.FragmentShader);
             meshRenderer.FinalizeMaterial();
 
-            mapDisplay.renderer = meshRenderer;
+            mapDisplay.imageRenderer = meshRenderer;
 
             mapObject.AddComponent(mapGen);
             mapObject.AddComponent(mapDisplay);

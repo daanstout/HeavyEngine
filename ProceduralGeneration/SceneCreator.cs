@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-using HeavyEngine;
+﻿using HeavyEngine;
 
 using ProceduralGeneration.Scenes;
 

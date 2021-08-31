@@ -4,6 +4,8 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 
+using HeavyEngine.Rendering;
+
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 
@@ -31,10 +33,17 @@ namespace HeavyEngine {
             }
         }
 
+        private class UniformData {
+            public int location;
+            public object data;
+            public Action setData;
+        }
+
         public MaterialFlags Flags { get; private set; }
-        public Uniform[] GetUniforms => uniformCache.Values.ToArray();
+        public Uniform[] Uniforms => uniformCache.Values.ToArray();
 
         private readonly Dictionary<string, Uniform> uniformCache = new Dictionary<string, Uniform>();
+        private UniformData[] uniformData;
         private readonly List<Shader> shaders;
         private readonly int handle;
         private bool isFinalized;
@@ -81,6 +90,12 @@ namespace HeavyEngine {
             isFinalized = true;
         }
 
+        public void SetData() {
+            for (int i = 0; i < uniformData.Length; i++)
+                if (uniformData[i].data != default)
+                    uniformData[i].setData();
+        }
+
         public void Dispose() {
             uniformCache.Clear();
             GC.SuppressFinalize(this);
@@ -101,40 +116,51 @@ namespace HeavyEngine {
         public void Unbind() => GL.UseProgram(0);
 
         #region Set Uniform Functions
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SetVec2(string name, Vector2 vec) => GL.Uniform2(uniformCache[name].Location, vec);
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SetVec3(string name, Vector3 vec) => GL.Uniform3(uniformCache[name].Location, vec);
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SetInt(string name, int val) => GL.Uniform1(uniformCache[name].Location, val);
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SetColor(string name, Color4 color) => GL.Uniform4(uniformCache[name].Location, color);
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SetFloat(string name, float val) => GL.Uniform1(uniformCache[name].Location, val);
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool TrySetMat4(string name, Matrix4 mat) {
-            if (!uniformCache.ContainsKey(name))
-                return false;
-
-            GL.UniformMatrix4(uniformCache[name].Location, true, ref mat);
-            return true;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SetMat4(string name, Matrix4 mat) => GL.UniformMatrix4(uniformCache[name].Location, true, ref mat);
+        public void SetColor(string name, Color4 color) => SetData(name, color, ActiveUniformType.FloatVec4);
+        public void SetFloat(string name, float value) => SetData(name, value, ActiveUniformType.Float);
+        public void SetInt(string name, int value) => SetData(name, value, ActiveUniformType.Int);
+        public void SetMat4(string name, Matrix4 value) => SetData(name, value, ActiveUniformType.FloatMat4);
+        public void SetVec2(string name, Vector2 vector) => SetData(name, vector, ActiveUniformType.FloatVec2);
+        public void SetVec3(string name, Vector3 vector) => SetData(name, vector, ActiveUniformType.FloatVec3);
         #endregion
+
+        private void SetData(string name, object data, ActiveUniformType type) {
+            if (uniformCache.TryGetValue(name, out Uniform value))
+                if (value.UniformType == type)
+                    uniformData[value.Location].data = data;
+        }
 
         private void FillUniformCache() {
             GL.GetProgram(handle, GetProgramParameterName.ActiveUniforms, out int uniformCount);
+            uniformData = new UniformData[uniformCount];
 
             for (int i = 0; i < uniformCount; i++) {
                 GL.GetActiveUniform(handle, i, 100, out int length, out int size, out ActiveUniformType type, out string name);
                 uniformCache.Add(name, new Uniform(length, size, type, name, i));
+
+                var data = new UniformData() {
+                    location = i
+                };
+
+                data.setData = type switch {
+                    ActiveUniformType.Bool => () => GL.Uniform1(data.location, (int)data.data),
+                    ActiveUniformType.Double => () => GL.Uniform1(data.location, (double)data.data),
+                    ActiveUniformType.Float => () => GL.Uniform1(data.location, (float)data.data),
+                    ActiveUniformType.FloatMat4 => () => { var mat = (Matrix4)data.data; GL.UniformMatrix4(data.location, true, ref mat); }
+                    ,
+                    ActiveUniformType.FloatVec2 => () => { var vec = (Vector2)data.data; GL.Uniform2(data.location, ref vec); }
+                    ,
+                    ActiveUniformType.FloatVec3 => () => { var vec = (Vector3)data.data; GL.Uniform3(data.location, ref vec); }
+                    ,
+                    ActiveUniformType.FloatVec4 => () => { var vec = (Vector4)data.data; GL.Uniform4(data.location, ref vec); }
+                    ,
+                    ActiveUniformType.Int => () => GL.Uniform1(data.location, (int)data.data),
+                    ActiveUniformType.Sampler2D => () => GL.Uniform1(data.location, (int)data.data),
+                    ActiveUniformType.UnsignedInt => () => GL.Uniform1(data.location, (uint)data.data),
+                    _ => () => Console.WriteLine($"Uniform type of {type} is currently not supported.")
+                };
+
+                uniformData[i] = data;
             }
         }
     }
