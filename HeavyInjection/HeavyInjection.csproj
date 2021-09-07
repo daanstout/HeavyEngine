@@ -5,4 +5,8 @@
     <AssemblyName>HeavyInjection</AssemblyName>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\HeavyLinq\HeavyLinq.csproj" />
+  </ItemGroup>
+
 </Project>

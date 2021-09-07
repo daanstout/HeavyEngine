@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
+//using System.Linq;
 
 using HeavyEngine.Logging;
+using HeavyEngine.Linq;
 
 namespace HeavyEngine {
     /// <summary>

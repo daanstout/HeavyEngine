@@ -30,6 +30,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HeavyInjection\HeavyInjection.csproj" />
+    <ProjectReference Include="..\HeavyLinq\HeavyLinq.csproj" />
   </ItemGroup>
 
 </Project>

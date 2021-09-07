@@ -12,8 +12,7 @@ namespace HeavyEngine {
     public class Window : GameWindow {
         [Dependency] private protected readonly IEventService eventService;
         [Dependency] private protected readonly IInputService inputService;
-        [Dependency] private protected ICameraService cameraService;
-        [Dependency] private protected readonly ICoroutineService coroutineService;
+        [Dependency] private protected readonly ICameraService cameraService;
         [Dependency] private protected readonly ILogger logger;
 
         protected Scene currentScene;
@@ -41,7 +40,15 @@ namespace HeavyEngine {
             if (!IsFocused)
                 return;
 
+            /* Update order:
+             * - Time
+             * - Input
+             * - Update Event
+             * - Scene
+             */
+
             Time.Update(args);
+            eventService.Invoke<InputUpdateEvent, InputUpdateEventArgs>(new InputUpdateEventArgs(KeyboardState));
             eventService.Invoke<UpdateEvent>();
             inputService.Update(KeyboardState);
             currentScene?.Update();
@@ -69,7 +76,7 @@ namespace HeavyEngine {
             };
         }
 
-        public static NativeWindowSettings CreateDefaultNativeWindowSettings(int width = 640, int height = 480, string title = "Metal Engine") {
+        public static NativeWindowSettings CreateDefaultNativeWindowSettings(int width = 640, int height = 480, string title = "Heavy Engine") {
             var settings = new NativeWindowSettings {
                 Title = title,
                 WindowState = WindowState.Normal,

@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HeavyEngine\HeavyEngine.csproj" />
+    <ProjectReference Include="..\HeavyLinq\HeavyLinq.csproj" />
   </ItemGroup>
 
 </Project>

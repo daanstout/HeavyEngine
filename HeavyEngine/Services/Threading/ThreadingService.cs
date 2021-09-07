@@ -5,7 +5,7 @@ using System.Linq;
 namespace HeavyEngine.Threading {
     [Service(typeof(ThreadingService), ServiceTypes.Singleton)]
     public sealed class ThreadingService : IService, IThreadingService {
-        private const int DEFAULT_THREAD_SIZE = 4;
+        private static readonly int DEFAULT_THREAD_SIZE = Environment.ProcessorCount;
 
         private class QueueItem {
             public Action task;
@@ -49,11 +49,15 @@ namespace HeavyEngine.Threading {
 
             var threads = new IThreadTask[threadCount];
 
+            int threadIndex = 0;
             for (int i = 0; i < threadCount; i++) {
-                if (i >= this.threads.Length)
+                while (this.threads[threadIndex].IsAvailable && threadIndex < this.threads.Length - 1)
+                    threadIndex++;
+
+                if (threadIndex >= this.threads.Length)
                     break;
 
-                threads[i] = this.threads[i];
+                threads[i] = this.threads[threadIndex];
             }
 
             this.threads = threads;
@@ -69,12 +73,12 @@ namespace HeavyEngine.Threading {
                 SetThreadCount(targetThreadCount);
 
             while (tasks.Count > 0 && runningThreads < targetThreadCount) {
-                var item = tasks.Dequeue();
-
                 var availableThread = FirstAvailableThread();
 
                 if (availableThread == null)
                     break;
+
+                var item = tasks.Dequeue();
 
                 availableThread.Initialize(item.task, () => {
                     runningThreads--;

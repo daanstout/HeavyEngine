@@ -25,26 +25,39 @@ namespace TestConsole {
         }
 
         static void TransformPositionMath() {
-            var trans1 = new Transform();
-            var trans2 = new Transform();
-            trans2.SetParent(trans1);
-            trans1.Position = new Vector3(1, 1, 1);
-            Console.WriteLine(trans2.GlobalPosition);
+            var parent = new Transform();
+            var child = new Transform();
+            child.SetParent(parent);
+            child.Position = new Vector3(1, 1, 1);
 
-            trans2.Position = new Vector3(2, 0, 0);
-            Console.WriteLine(trans2.GlobalPosition);
+            parent.Rotation = Quaternion.FromEulerAngles(Mathf.PI / 2.0f, 0.0f, 0.0f);
+            Console.WriteLine(child.GlobalPosition);
 
-            trans1.Rotation = Quaternion.FromEulerAngles(0.0f, Mathf.PI / 2, 0.0f);
-            Console.WriteLine(trans2.GlobalPosition);
 
-            trans1.Rotation = Quaternion.Identity;
-            trans2.GlobalPosition = new Vector3(0, 0, 0);
-            Console.WriteLine(trans2.Position);
-            Console.WriteLine(trans2.GlobalPosition);
+            child.Position = new Vector3(2, 0, 0);
+            Console.WriteLine(child.GlobalPosition);
+
+            parent.Rotation = Quaternion.FromEulerAngles(0.0f, Mathf.PI / 2, 0.0f);
+            Console.WriteLine(child.GlobalPosition);
+
+            parent.Rotation = Quaternion.Identity;
+            child.GlobalPosition = new Vector3(0, 0, 0);
+            Console.WriteLine(child.Position);
+            Console.WriteLine(child.GlobalPosition);
 
             var trans3 = new Transform();
-            trans3.SetParent(trans2);
+            trans3.SetParent(child);
             Console.WriteLine(trans3.GlobalPosition);
+        }
+
+        static void InputTest() {
+            var inputService = new HeavyEngine.Input.InputService();
+            var context = new object();
+
+            var key = inputService.CreateTriggerKey(context);
+            context = null;
+            
+
         }
     }
 }
